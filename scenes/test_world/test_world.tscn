@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://tod_test_world"]
+[gd_scene load_steps=12 format=3 uid="uid://tod_test_world"]
 
 [ext_resource type="Script" path="res://scripts/mobile_test_player.gd" id="1_mobile_player"]
 [ext_resource type="Script" path="res://scripts/mobile_test_controls.gd" id="2_mobile_controls"]
 [ext_resource type="Script" path="res://scripts/follow_camera.gd" id="3_follow_camera"]
+[ext_resource type="Script" path="res://scripts/test_interactable.gd" id="4_test_interactable"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 size = Vector3(24, 0.2, 24)
@@ -17,6 +18,15 @@ height = 2.0
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
 radius = 0.5
 height = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_interactable"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_interactable"]
+size = Vector3(1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_interactable"]
+albedo_color = Color(0.2, 0.55, 1, 1)
 
 [node name="TestWorld" type="Node3D"]
 
@@ -43,6 +53,22 @@ mesh = SubResource("CapsuleMesh_player")
 [node name="PlayerCollision" type="CollisionShape3D" parent="PlaceholderPlayer"]
 shape = SubResource("CapsuleShape3D_player")
 
+[node name="TestInteractable" type="StaticBody3D" parent="." groups=["test_interactable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 0)
+script = ExtResource("4_test_interactable")
+
+[node name="InteractableMesh" type="MeshInstance3D" parent="TestInteractable"]
+mesh = SubResource("BoxMesh_interactable")
+surface_material_override/0 = SubResource("StandardMaterial3D_interactable")
+
+[node name="InteractableCollision" type="CollisionShape3D" parent="TestInteractable"]
+shape = SubResource("BoxShape3D_interactable")
+
+[node name="InteractableLabel" type="Label3D" parent="TestInteractable"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+text = "Test Interactable"
+billboard = 1
+
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 4, 8)
 current = true
@@ -66,9 +92,21 @@ anchor_right = 1.0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = -20.0
-offset_bottom = 60.0
+offset_bottom = 52.0
 grow_horizontal = 2
-text = "Mobile Test Build: move the capsule, camera follows."
+text = "Mobile Test Build"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="MobileTestControls/Controls"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 56.0
+offset_right = -20.0
+offset_bottom = 94.0
+grow_horizontal = 2
+text = "Move, jump, and test interact."
 horizontal_alignment = 1
 
 [node name="BackToMenuButton" type="Button" parent="MobileTestControls/Controls"]
@@ -130,3 +168,27 @@ offset_top = 156.0
 offset_right = 152.0
 offset_bottom = 230.0
 text = "↓"
+
+[node name="ActionButtons" type="VBoxContainer" parent="MobileTestControls/Controls"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -174.0
+offset_top = -180.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="JumpButton" type="Button" parent="MobileTestControls/Controls/ActionButtons"]
+custom_minimum_size = Vector2(150, 70)
+layout_mode = 2
+text = "Jump"
+
+[node name="InteractButton" type="Button" parent="MobileTestControls/Controls/ActionButtons"]
+custom_minimum_size = Vector2(150, 70)
+layout_mode = 2
+text = "Interact"
