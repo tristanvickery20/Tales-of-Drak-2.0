@@ -7,6 +7,10 @@ extends CharacterBody3D
 
 var _move_input := Vector2.ZERO
 var _jump_requested := false
+var _spawn_position := Vector3.ZERO
+
+func _ready() -> void:
+	_spawn_position = global_position
 
 func _physics_process(delta: float) -> void:
 	var direction := Vector3(_move_input.x, 0.0, _move_input.y)
@@ -32,6 +36,20 @@ func set_move_input(input: Vector2) -> void:
 
 func request_jump() -> void:
 	_jump_requested = true
+
+func reset_to_spawn() -> void:
+	global_position = _spawn_position
+	velocity = Vector3.ZERO
+	_move_input = Vector2.ZERO
+	_jump_requested = false
+
+func get_debug_summary() -> String:
+	return "Stage 1B | FPS: %d | Pos: %.1f, %.1f, %.1f" % [
+		Engine.get_frames_per_second(),
+		global_position.x,
+		global_position.y,
+		global_position.z,
+	]
 
 func try_interact() -> String:
 	var interactables := get_tree().get_nodes_in_group("test_interactable")
