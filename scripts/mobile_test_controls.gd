@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu/main_menu.tscn"
+const STAGE_1D_ZONE_SCRIPT := preload("res://scripts/test_zone_layout.gd")
 
 @onready var player: Node = get_node_or_null("../PlaceholderPlayer")
 @onready var camera: Node = get_node_or_null("../Camera3D")
@@ -15,6 +16,7 @@ var _paused := false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_ensure_stage_1d_zone_exists()
 	_ensure_mobile_debug_controls_exist()
 	_refresh_optional_nodes()
 
@@ -53,7 +55,7 @@ func _ready() -> void:
 		pause_menu_button.pressed.connect(_on_back_to_menu_pressed)
 
 	_set_paused(false)
-	_set_status("Move, jump, interact, pause, reset, or rotate camera.")
+	_set_status("Stage 1D: explore the tiny outdoor test zone.")
 
 func _process(_delta: float) -> void:
 	if not _paused and player != null and player.has_method("set_move_input"):
@@ -64,6 +66,17 @@ func _process(_delta: float) -> void:
 
 	if debug_label != null and player != null and player.has_method("get_debug_summary"):
 		debug_label.text = str(player.get_debug_summary())
+
+func _ensure_stage_1d_zone_exists() -> void:
+	var world := get_parent() as Node3D
+	if world == null:
+		return
+	if world.get_node_or_null("Stage1DZoneController") != null:
+		return
+	var zone_controller := Node3D.new()
+	zone_controller.name = "Stage1DZoneController"
+	zone_controller.set_script(STAGE_1D_ZONE_SCRIPT)
+	world.add_child(zone_controller)
 
 func _ensure_mobile_debug_controls_exist() -> void:
 	var controls := get_node_or_null("Controls") as Control
@@ -79,7 +92,7 @@ func _ensure_mobile_debug_controls_exist() -> void:
 		new_debug_label.offset_right = -20.0
 		new_debug_label.offset_bottom = 130.0
 		new_debug_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		new_debug_label.text = "Stage 1C debug ready"
+		new_debug_label.text = "Stage 1D debug ready"
 		controls.add_child(new_debug_label)
 
 	if get_node_or_null("Controls/PauseButton") == null:
