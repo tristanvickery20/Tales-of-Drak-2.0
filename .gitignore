@@ -1,0 +1,18 @@
+# Godot 4
+.godot/
+.import/
+export.cfg
+export_presets.cfg.bak
+
+# Builds
+build/
+*.zip
+*.pck
+*.wasm
+*.html
+*.js
+
+# OS/editor junk
+.DS_Store
+Thumbs.db
+.vscode/
