@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://tod_test_world"]
+[gd_scene load_steps=7 format=3 uid="uid://tod_test_world"]
+
+[ext_resource type="Script" path="res://scripts/mobile_test_player.gd" id="1_mobile_player"]
+[ext_resource type="Script" path="res://scripts/mobile_test_controls.gd" id="2_mobile_controls"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 size = Vector3(24, 0.2, 24)
@@ -31,6 +34,7 @@ shape = SubResource("BoxShape3D_ground")
 
 [node name="PlaceholderPlayer" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+script = ExtResource("1_mobile_player")
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="PlaceholderPlayer"]
 mesh = SubResource("CapsuleMesh_player")
@@ -41,3 +45,73 @@ shape = SubResource("CapsuleShape3D_player")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 4, 8)
 current = true
+
+[node name="MobileTestControls" type="CanvasLayer" parent="."]
+script = ExtResource("2_mobile_controls")
+
+[node name="Controls" type="Control" parent="MobileTestControls"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="InstructionLabel" type="Label" parent="MobileTestControls/Controls"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 60.0
+grow_horizontal = 2
+text = "iPhone test: hold the arrow buttons to move the capsule."
+horizontal_alignment = 1
+
+[node name="MovePad" type="Control" parent="MobileTestControls/Controls"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -210.0
+offset_right = 224.0
+offset_bottom = -20.0
+grow_vertical = 0
+
+[node name="UpButton" type="Button" parent="MobileTestControls/Controls/MovePad"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 0
+offset_left = 68.0
+offset_top = 0.0
+offset_right = 132.0
+offset_bottom = 64.0
+text = "↑"
+
+[node name="LeftButton" type="Button" parent="MobileTestControls/Controls/MovePad"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 0
+offset_left = 0.0
+offset_top = 68.0
+offset_right = 64.0
+offset_bottom = 132.0
+text = "←"
+
+[node name="RightButton" type="Button" parent="MobileTestControls/Controls/MovePad"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 0
+offset_left = 136.0
+offset_top = 68.0
+offset_right = 200.0
+offset_bottom = 132.0
+text = "→"
+
+[node name="DownButton" type="Button" parent="MobileTestControls/Controls/MovePad"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 0
+offset_left = 68.0
+offset_top = 136.0
+offset_right = 132.0
+offset_bottom = 200.0
+text = "↓"
