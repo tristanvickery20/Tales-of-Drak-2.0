@@ -12,6 +12,10 @@ var _move_input := Vector2.ZERO
 var _paused := false
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	_ensure_mobile_debug_controls_exist()
+	_refresh_optional_nodes()
+
 	_connect_button("Controls/MovePad/UpButton", Vector2(0, -1))
 	_connect_button("Controls/MovePad/DownButton", Vector2(0, 1))
 	_connect_button("Controls/MovePad/LeftButton", Vector2(-1, 0))
@@ -53,6 +57,84 @@ func _process(_delta: float) -> void:
 
 	if debug_label != null and player != null and player.has_method("get_debug_summary"):
 		debug_label.text = str(player.get_debug_summary())
+
+func _ensure_mobile_debug_controls_exist() -> void:
+	var controls := get_node_or_null("Controls") as Control
+	if controls == null:
+		return
+
+	if get_node_or_null("Controls/DebugLabel") == null:
+		var new_debug_label := Label.new()
+		new_debug_label.name = "DebugLabel"
+		new_debug_label.set_anchors_preset(Control.PRESET_TOP_WIDE)
+		new_debug_label.offset_left = 20.0
+		new_debug_label.offset_top = 96.0
+		new_debug_label.offset_right = -20.0
+		new_debug_label.offset_bottom = 130.0
+		new_debug_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		new_debug_label.text = "Stage 1B debug ready"
+		controls.add_child(new_debug_label)
+
+	if get_node_or_null("Controls/PauseButton") == null:
+		var new_pause_button := Button.new()
+		new_pause_button.name = "PauseButton"
+		new_pause_button.custom_minimum_size = Vector2(150, 52)
+		new_pause_button.set_anchors_preset(Control.PRESET_TOP_LEFT)
+		new_pause_button.offset_left = 20.0
+		new_pause_button.offset_top = 20.0
+		new_pause_button.offset_right = 170.0
+		new_pause_button.offset_bottom = 72.0
+		new_pause_button.text = "Pause"
+		controls.add_child(new_pause_button)
+
+	var action_buttons := get_node_or_null("Controls/ActionButtons") as VBoxContainer
+	if action_buttons != null and get_node_or_null("Controls/ActionButtons/ResetButton") == null:
+		var reset_button := Button.new()
+		reset_button.name = "ResetButton"
+		reset_button.custom_minimum_size = Vector2(150, 64)
+		reset_button.text = "Reset"
+		action_buttons.add_child(reset_button)
+
+	if get_node_or_null("Controls/PausePanel") == null:
+		var panel := Panel.new()
+		panel.name = "PausePanel"
+		panel.set_anchors_preset(Control.PRESET_FULL_RECT)
+		panel.visible = false
+		controls.add_child(panel)
+
+		var box := VBoxContainer.new()
+		box.name = "PanelBox"
+		box.set_anchors_preset(Control.PRESET_CENTER)
+		box.offset_left = -120.0
+		box.offset_top = -90.0
+		box.offset_right = 120.0
+		box.offset_bottom = 90.0
+		box.alignment = BoxContainer.ALIGNMENT_CENTER
+		panel.add_child(box)
+
+		var title := Label.new()
+		title.name = "PauseTitle"
+		title.text = "Paused"
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		box.add_child(title)
+
+		var resume_button := Button.new()
+		resume_button.name = "ResumeButton"
+		resume_button.custom_minimum_size = Vector2(220, 58)
+		resume_button.text = "Resume"
+		box.add_child(resume_button)
+
+		var menu_button := Button.new()
+		menu_button.name = "MenuButton"
+		menu_button.custom_minimum_size = Vector2(220, 58)
+		menu_button.text = "Menu"
+		box.add_child(menu_button)
+
+func _refresh_optional_nodes() -> void:
+	status_label = get_node_or_null("Controls/StatusLabel") as Label
+	debug_label = get_node_or_null("Controls/DebugLabel") as Label
+	pause_panel = get_node_or_null("Controls/PausePanel") as Control
+	pause_button = get_node_or_null("Controls/PauseButton") as Button
 
 func _connect_button(path: String, direction: Vector2) -> void:
 	var button := get_node_or_null(path)
