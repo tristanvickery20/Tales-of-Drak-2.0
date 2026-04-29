@@ -10,6 +10,8 @@ var _move_input := Vector2.ZERO
 var _jump_requested := false
 var _spawn_position := Vector3.ZERO
 var _camera: Node
+var _wood_count := 0
+var _stone_count := 0
 
 func _ready() -> void:
 	_spawn_position = global_position
@@ -62,11 +64,13 @@ func reset_to_spawn() -> void:
 	_jump_requested = false
 
 func get_debug_summary() -> String:
-	return "Stage 1C | FPS: %d | Pos: %.1f, %.1f, %.1f" % [
+	return "Stage 1E | FPS: %d | Pos: %.1f, %.1f, %.1f | Wood: %d | Stone: %d" % [
 		Engine.get_frames_per_second(),
 		global_position.x,
 		global_position.y,
 		global_position.z,
+		_wood_count,
+		_stone_count,
 	]
 
 func try_interact() -> String:
@@ -84,9 +88,15 @@ func try_interact() -> String:
 			closest_distance = distance
 
 	if closest == null:
-		return "Move closer to the test object."
+		return "Move closer to an interactable."
 
+	var result := "Interacted with Test Object"
 	if closest.has_method("interact"):
-		return str(closest.interact())
+		result = str(closest.interact())
 
-	return "Interacted with Test Object"
+	if result.contains("Picked up Wood"):
+		_wood_count += 1
+	elif result.contains("Picked up Stone"):
+		_stone_count += 1
+
+	return result
