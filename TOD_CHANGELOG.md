@@ -2,9 +2,49 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2L — Damage Type Foundation
+## Stage 2M — Hit Dice + Rest Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_rest_tracker.gd`.
+- Added hit dice tracking for short-rest style testing.
+- Added `Spend Hit Die` button to the mobile Character Sheet.
+- Added `Long Rest` button to the mobile Character Sheet.
+- Added hit dice / rest display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2M`.
+
+### Current Placeholder Rules
+- Current placeholder hit die is `d10`.
+- Current placeholder max hit dice is `1`.
+- `Spend Hit Die` rolls a d10, adds CON modifier, and shows preview healing.
+- Preview healing does not change HP yet.
+- `Long Rest` restores hit dice only in this stage.
+- No damage, real healing, class hit dice, rest duration, exhaustion, spell recovery, or resource recovery is connected yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, action economy tracker, cooldown tracker, and damage type registry.
+
+### Not Added Yet
+- No HP reduction.
+- No real healing.
+- No hotbar UI.
+- No automatic real-time cooldown ticking.
+- No damage application system.
+- No combat.
+- No enemies.
+- No classes or races.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2L — Damage Type Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_damage_types.gd`.
