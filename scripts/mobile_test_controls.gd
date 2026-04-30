@@ -4,6 +4,9 @@ const MAIN_MENU_SCENE := "res://scenes/main_menu/main_menu.tscn"
 const TEST_WORLD_SCENE := "res://scenes/test_world/test_world.tscn"
 const STAGE_1D_ZONE_SCRIPT := preload("res://scripts/test_zone_layout.gd")
 
+@export var spawn_outdoor_test_zone := true
+@export var stage_label := "Stage 1H: scene transition test."
+
 @onready var player: Node = get_node_or_null("../PlaceholderPlayer")
 @onready var camera: Node = get_node_or_null("../Camera3D")
 @onready var status_label: Label = get_node_or_null("Controls/StatusLabel") as Label
@@ -17,12 +20,13 @@ var _paused := false
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	_ensure_stage_1d_zone_exists()
+	if spawn_outdoor_test_zone:
+		_ensure_stage_1d_zone_exists()
 	_ensure_mobile_debug_controls_exist()
 	_refresh_optional_nodes()
 	_connect_input_buttons()
 	_set_paused(false)
-	_set_status("Stage 1G: stable visible-scene foundation.")
+	_set_status(stage_label)
 
 func _process(_delta: float) -> void:
 	if not _paused and player != null and player.has_method("set_move_input"):
@@ -32,7 +36,7 @@ func _process(_delta: float) -> void:
 		camera.set_orbit_input(_orbit_input if not _paused else 0.0)
 
 	if debug_label != null and player != null and player.has_method("get_debug_summary"):
-		debug_label.text = str(player.get_debug_summary()).replace("Stage 1E", "Stage 1G").replace("Stage 1F", "Stage 1G")
+		debug_label.text = str(player.get_debug_summary()).replace("Stage 1E", "Stage 1H").replace("Stage 1F", "Stage 1H").replace("Stage 1G", "Stage 1H")
 
 func _connect_input_buttons() -> void:
 	_connect_button("Controls/MovePad/UpButton", Vector2(0, -1))
@@ -94,7 +98,7 @@ func _ensure_mobile_debug_controls_exist() -> void:
 		new_debug_label.offset_right = -20.0
 		new_debug_label.offset_bottom = 130.0
 		new_debug_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		new_debug_label.text = "Stage 1G debug ready"
+		new_debug_label.text = "Stage 1H debug ready"
 		controls.add_child(new_debug_label)
 
 	if get_node_or_null("Controls/PauseButton") == null:
@@ -237,7 +241,10 @@ func _on_reset_pressed() -> void:
 	get_tree().paused = false
 	_move_input = Vector2.ZERO
 	_orbit_input = 0.0
-	get_tree().change_scene_to_file(TEST_WORLD_SCENE)
+	var current_scene_path := TEST_WORLD_SCENE
+	if get_tree().current_scene != null and not get_tree().current_scene.scene_file_path.is_empty():
+		current_scene_path = get_tree().current_scene.scene_file_path
+	get_tree().change_scene_to_file(current_scene_path)
 
 func _on_pause_pressed() -> void:
 	_set_paused(true)
