@@ -27,6 +27,7 @@ func _build_overlay() -> void:
 	_root = Control.new()
 	_root.name = "DrakCharacterSheetOverlayRoot"
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_root)
 
 	_sheet_button = Button.new()
@@ -38,6 +39,7 @@ func _build_overlay() -> void:
 	_sheet_button.offset_top = 14.0
 	_sheet_button.offset_right = -174.0
 	_sheet_button.offset_bottom = 62.0
+	_sheet_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_sheet_button.pressed.connect(_toggle_sheet)
 	_root.add_child(_sheet_button)
 
@@ -49,6 +51,7 @@ func _build_overlay() -> void:
 	_sheet_panel.offset_right = 165.0
 	_sheet_panel.offset_bottom = 210.0
 	_sheet_panel.visible = false
+	_sheet_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.add_child(_sheet_panel)
 
 	var box := VBoxContainer.new()
@@ -58,24 +61,28 @@ func _build_overlay() -> void:
 	box.offset_top = 16.0
 	box.offset_right = -18.0
 	box.offset_bottom = -16.0
+	box.mouse_filter = Control.MOUSE_FILTER_PASS
 	_sheet_panel.add_child(box)
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
 	title.text = "Stage 2B Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
 
 	_sheet_text = Label.new()
 	_sheet_text.name = "AbilityScoresText"
 	_sheet_text.text = _get_sheet_text()
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
 	var roll_button := Button.new()
 	roll_button.name = "RollStrengthCheckButton"
 	roll_button.text = "Roll STR Check DC 10"
 	roll_button.custom_minimum_size = Vector2(260, 52)
+	roll_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	roll_button.pressed.connect(_roll_strength_check)
 	box.add_child(roll_button)
 
@@ -83,6 +90,7 @@ func _build_overlay() -> void:
 	proficient_roll_button.name = "RollProficientDexCheckButton"
 	proficient_roll_button.text = "Roll Proficient DEX Check DC 12"
 	proficient_roll_button.custom_minimum_size = Vector2(260, 52)
+	proficient_roll_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	proficient_roll_button.pressed.connect(_roll_proficient_dex_check)
 	box.add_child(proficient_roll_button)
 
@@ -90,6 +98,7 @@ func _build_overlay() -> void:
 	_check_result_text.name = "CheckResultText"
 	_check_result_text.text = "No check rolled yet."
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_check_result_text)
 
 	var note := Label.new()
@@ -97,12 +106,14 @@ func _build_overlay() -> void:
 	note.text = "Stage 2B only: ability mods, proficiency bonus, and simple d20 checks."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(note)
 
 	var close_button := Button.new()
 	close_button.name = "CloseCharacterSheetButton"
 	close_button.text = "Close"
 	close_button.custom_minimum_size = Vector2(220, 52)
+	close_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	close_button.pressed.connect(_hide_sheet)
 	box.add_child(close_button)
 
