@@ -2,9 +2,38 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3A — Character Identity Shell
+## Stage 3A Fix — Sheet Overlay Preload Safety
 
 Status: added, awaiting iPhone test confirmation.
+
+### Fixed
+- Removed the risky direct preload dependency from the mobile Sheet overlay for the new character identity shell.
+- Kept `drak/character/drak_character_identity.gd` in the project as the future modular identity shell.
+- Added safe built-in fallback identity text inside the Sheet overlay so the Sheet button should not disappear if a new identity script has an export/web issue.
+- Added replacement support for the old `Stage 11` HUD text so the visible HUD should update to `Stage 3A`.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3A character identity display.
+
+### Not Added Yet
+- No race/species traits.
+- No class features.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3A — Character Identity Shell
+
+Status: needs retest after overlay fix.
 
 ### Added
 - Added `STAGE3_DELIVERABLE.md`.
