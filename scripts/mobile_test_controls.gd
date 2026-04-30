@@ -2,7 +2,6 @@ extends CanvasLayer
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu/main_menu.tscn"
 const STAGE_1D_ZONE_SCRIPT := preload("res://scripts/test_zone_layout.gd")
-const TEST_NPC_SCRIPT := preload("res://scripts/test_npc.gd")
 
 @onready var player: Node = get_node_or_null("../PlaceholderPlayer")
 @onready var camera: Node = get_node_or_null("../Camera3D")
@@ -18,10 +17,23 @@ var _paused := false
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_ensure_stage_1d_zone_exists()
-	_ensure_test_npc_exists()
 	_ensure_mobile_debug_controls_exist()
 	_refresh_optional_nodes()
+	_connect_input_buttons()
+	_set_paused(false)
+	_set_status("Stage 1G: stable visible-scene foundation.")
 
+func _process(_delta: float) -> void:
+	if not _paused and player != null and player.has_method("set_move_input"):
+		player.set_move_input(_move_input)
+
+	if camera != null and camera.has_method("set_orbit_input"):
+		camera.set_orbit_input(_orbit_input if not _paused else 0.0)
+
+	if debug_label != null and player != null and player.has_method("get_debug_summary"):
+		debug_label.text = str(player.get_debug_summary()).replace("Stage 1E", "Stage 1G").replace("Stage 1F", "Stage 1G")
+
+func _connect_input_buttons() -> void:
 	_connect_button("Controls/MovePad/UpButton", Vector2(0, -1))
 	_connect_button("Controls/MovePad/DownButton", Vector2(0, 1))
 	_connect_button("Controls/MovePad/LeftButton", Vector2(-1, 0))
@@ -56,19 +68,6 @@ func _ready() -> void:
 	if pause_menu_button != null:
 		pause_menu_button.pressed.connect(_on_back_to_menu_pressed)
 
-	_set_paused(false)
-	_set_status("Stage 1F: test NPC is the big yellow block.")
-
-func _process(_delta: float) -> void:
-	if not _paused and player != null and player.has_method("set_move_input"):
-		player.set_move_input(_move_input)
-
-	if camera != null and camera.has_method("set_orbit_input"):
-		camera.set_orbit_input(_orbit_input if not _paused else 0.0)
-
-	if debug_label != null and player != null and player.has_method("get_debug_summary"):
-		debug_label.text = str(player.get_debug_summary())
-
 func _ensure_stage_1d_zone_exists() -> void:
 	var world := get_parent() as Node3D
 	if world == null:
@@ -79,48 +78,6 @@ func _ensure_stage_1d_zone_exists() -> void:
 	zone_controller.name = "Stage1DZoneController"
 	zone_controller.set_script(STAGE_1D_ZONE_SCRIPT)
 	world.add_child(zone_controller)
-
-func _ensure_test_npc_exists() -> void:
-	var world := get_parent() as Node3D
-	if world == null:
-		return
-
-	var old_npc := world.get_node_or_null("TestNPC")
-	if old_npc != null:
-		old_npc.queue_free()
-
-	var npc := StaticBody3D.new()
-	npc.name = "TestNPC"
-	npc.position = Vector3(-3.0, 1.0, 0.0)
-	npc.add_to_group("test_interactable")
-	npc.set_script(TEST_NPC_SCRIPT)
-	npc.set("npc_name", "Test NPC")
-	npc.set("interaction_line", "The road ahead is not ready yet.")
-	world.add_child(npc)
-
-	var mesh_instance := MeshInstance3D.new()
-	mesh_instance.name = "TestNPCMesh"
-	var mesh := BoxMesh.new()
-	mesh.size = Vector3(1.4, 2.0, 1.4)
-	mesh_instance.mesh = mesh
-	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(1.0, 0.85, 0.05, 1)
-	mesh_instance.material_override = material
-	npc.add_child(mesh_instance)
-
-	var collision := CollisionShape3D.new()
-	collision.name = "TestNPCCollision"
-	var shape := BoxShape3D.new()
-	shape.size = Vector3(1.4, 2.0, 1.4)
-	collision.shape = shape
-	npc.add_child(collision)
-
-	var label := Label3D.new()
-	label.name = "TestNPCLabel"
-	label.text = "BIG YELLOW NPC"
-	label.position = Vector3(0, 1.35, 0)
-	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	npc.add_child(label)
 
 func _ensure_mobile_debug_controls_exist() -> void:
 	var controls := get_node_or_null("Controls") as Control
@@ -136,7 +93,7 @@ func _ensure_mobile_debug_controls_exist() -> void:
 		new_debug_label.offset_right = -20.0
 		new_debug_label.offset_bottom = 130.0
 		new_debug_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		new_debug_label.text = "Stage 1F debug ready"
+		new_debug_label.text = "Stage 1G debug ready"
 		controls.add_child(new_debug_label)
 
 	if get_node_or_null("Controls/PauseButton") == null:
