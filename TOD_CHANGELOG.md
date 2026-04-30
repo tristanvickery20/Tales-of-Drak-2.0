@@ -2,9 +2,60 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3E — Spellcasting Class Identity Shells
+## Stage 3F — Rogue / Barbarian / Ranger Identity Shells
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/character/classes/drak_other_class_identity_shells.gd`.
+- Added tiny identity shells for approved classes only:
+  - Rogue
+  - Barbarian
+  - Ranger
+- Added `Other Classes` button to the mobile Character Sheet.
+- Added other class shell summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 3F`.
+
+### Current Placeholder Rules
+- Other class shells are data-only labels for now.
+- Rogue, Barbarian, and Ranger are not selectable yet.
+- No Rogue features are active yet.
+- No Barbarian features are active yet.
+- No Ranger features or Ranger spellcasting are active yet.
+- No class features are active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3A character identity display.
+- Stage 3B approved race/species registry display.
+- Stage 3C approved class registry display.
+- Stage 3D Fighter level 1 shell display.
+- Stage 3E caster shell display.
+- Cleaned mobile Sheet layout.
+
+### Not Added Yet
+- No Rage.
+- No Sneak Attack.
+- No Favored Enemy.
+- No Natural Explorer.
+- No Ranger spellcasting.
+- No class features.
+- No race/species traits.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3E — Spellcasting Class Identity Shells
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/character/classes/drak_spellcaster_identity_shells.gd`.
