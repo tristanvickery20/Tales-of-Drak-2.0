@@ -2,9 +2,66 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3G — Character Foundation Audit + Closeout Checklist
+## Stage 4A — Hotbar / Combat Foundation Plan
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `STAGE4_DELIVERABLE.md`.
+- Added `TOD_STAGE4_PREFACE.md`.
+- Added `drak/combat/drak_hotbar_foundation_manifest.gd`.
+- Added Stage 4 hotbar foundation manifest with 8 planned inactive slot labels:
+  - Weapon Attack
+  - Class Feature
+  - Cantrip / Ranged
+  - Defensive Ability
+  - Heal / Recovery
+  - Control Ability
+  - Tame / Pet Command
+  - Dodge / Utility
+- Added `Stage 4 Plan` button to the mobile Character Sheet.
+- Updated Sheet summary for Stage 4A.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 4A`.
+
+### Current Placeholder Rules
+- This stage is a hotbar/combat planning shell only.
+- Combat direction is real-time SWTOR-style button/hotbar combat with cooldowns.
+- D&D rules are the math/resolution backbone, not a turn-based gameplay loop.
+- No hotbar buttons are visible in gameplay yet.
+- No actual abilities are active yet.
+- No target, enemy, damage, weapon, spell, class feature, or combat state logic is active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Pickups.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3 character/race/class foundation.
+- Cleaned mobile Sheet layout.
+
+### Not Added Yet
+- No real enemy combat.
+- No enemy AI.
+- No damage application.
+- No HP reduction.
+- No weapon/equipment inventory.
+- No spell attacks.
+- No spell saving throws.
+- No real class features.
+- No real race traits.
+- No loot.
+- No crafting.
+- No taming.
+- No quests.
+- No dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3G — Character Foundation Audit + Closeout Checklist
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `STAGE3_CLOSEOUT_CHECKLIST.md`.
