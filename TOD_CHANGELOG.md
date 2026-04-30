@@ -2,9 +2,67 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 4A — Hotbar / Combat Foundation Plan
+## Stage 4B — Visible Inactive Mobile Hotbar Shell
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/ui/drak_hotbar_overlay.gd`.
+- Added `DrakHotbarOverlay` autoload in `project.godot`.
+- Added visible 2-row inactive hotbar shell in playable scenes only.
+- Added 8 visible inactive slot labels:
+  - 1 Weapon
+  - 2 Class
+  - 3 Range
+  - 4 Guard
+  - 5 Heal
+  - 6 Control
+  - 7 Tame
+  - 8 Dodge
+- Added `Hotbar Shell` button to the mobile Character Sheet.
+- Updated Sheet summary for Stage 4B.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 4B`.
+
+### Current Placeholder Rules
+- Hotbar shell is visual only.
+- Hotbar slots are labels, not active buttons.
+- No attacks are active yet.
+- No target selection is active yet.
+- No cooldown UI is active yet.
+- No abilities, class features, spells, damage, enemy health, or combat state logic is active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Pickups.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3 character/race/class foundation.
+- Stage 4A deliverable and preface files.
+- Cleaned mobile Sheet layout.
+
+### Not Added Yet
+- No real enemy combat.
+- No enemy AI.
+- No damage application.
+- No HP reduction.
+- No weapon/equipment inventory.
+- No spell attacks.
+- No spell saving throws.
+- No real class features.
+- No real race traits.
+- No loot.
+- No crafting.
+- No taming.
+- No quests.
+- No dialogue.
+- No Skelerealms integration yet.
+
+## Stage 4A — Hotbar / Combat Foundation Plan
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `STAGE4_DELIVERABLE.md`.
@@ -296,199 +354,6 @@ Status: confirmed working on iPhone after layout cleanup.
 - No combat.
 - No enemies.
 - No hotbar UI.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 3C — Approved Class Registry
-
-Status: confirmed working on iPhone.
-
-### Added
-- Added `drak/character/drak_class_registry.gd`.
-- Added approved class registry with only:
-  - Fighter
-  - Wizard
-  - Cleric
-  - Warlock
-  - Rogue
-  - Barbarian
-  - Ranger
-- Added `Preview Class Registry` button to the mobile Character Sheet.
-- Added approved class summary display to the Sheet.
-- Updated visible HUD stage labels to `Tales of Drak — Stage 3C`.
-
-### Current Placeholder Rules
-- Class registry is data-only for now.
-- Current character still displays `Fighter` as a label only.
-- No class features are active yet.
-- No spellcasting class behavior is active yet.
-- No hit die/class HP changes are active yet.
-- No proficiencies, saves, equipment, or starting features are active yet.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Stage 2 rules foundation.
-- Stage 3A character identity display.
-- Stage 3B approved race/species registry display.
-
-### Not Added Yet
-- No class features.
-- No race/species traits.
-- No XP system.
-- No combat.
-- No enemies.
-- No hotbar UI.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 3B — Approved Race/Species Registry
-
-Status: confirmed working on iPhone.
-
-### Added
-- Added `drak/character/drak_race_species_registry.gd`.
-- Added approved race/species registry with only:
-  - Elf
-  - Variant Human
-  - Dwarf
-  - Orc
-- Added `Preview Race/Species Registry` button to the mobile Character Sheet.
-- Added approved race/species summary display to the Sheet.
-- Updated visible HUD stage labels to `Tales of Drak — Stage 3B`.
-
-### Current Placeholder Rules
-- Race/species registry is data-only for now.
-- Current character still displays `Variant Human` as a label only.
-- No race/species traits are active yet.
-- No ability score changes are active yet.
-- No movement, spell, proficiency, ancestry, or feature changes are active yet.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Stage 2 rules foundation.
-- Stage 3A character identity display.
-
-### Not Added Yet
-- No race/species traits.
-- No class features.
-- No XP system.
-- No combat.
-- No enemies.
-- No hotbar UI.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 3A Fix — Sheet Overlay Preload Safety
-
-Status: confirmed working on iPhone.
-
-### Fixed
-- Removed the risky direct preload dependency from the mobile Sheet overlay for the new character identity shell.
-- Kept `drak/character/drak_character_identity.gd` in the project as the future modular identity shell.
-- Added safe built-in fallback identity text inside the Sheet overlay so the Sheet button should not disappear if a new identity script has an export/web issue.
-- Added replacement support for the old `Stage 11` HUD text so the visible HUD should update to `Stage 3A`.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Stage 2 rules foundation.
-- Stage 3A character identity display.
-
-### Not Added Yet
-- No race/species traits.
-- No class features.
-- No XP system.
-- No combat.
-- No enemies.
-- No hotbar UI.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 3A — Character Identity Shell
-
-Status: confirmed working on iPhone after overlay fix.
-
-### Added
-- Added `STAGE3_DELIVERABLE.md`.
-- Added `drak/character/drak_character_identity.gd`.
-- Added a tiny character identity shell with:
-  - character name placeholder
-  - selected race/species placeholder
-  - selected class placeholder
-  - current level placeholder
-- Added `Preview Character Identity` button to the mobile Character Sheet.
-- Added character identity summary display to the Sheet.
-- Updated visible HUD stage labels to `Tales of Drak — Stage 3A`.
-
-### Current Placeholder Rules
-- Current placeholder character is `Drak Test Hero`.
-- Current placeholder race/species is `Variant Human`.
-- Current placeholder class is `Fighter`.
-- Current placeholder level is `1`.
-- No race/species traits are active yet.
-- No class features are active yet.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Stage 2 rules foundation, closeout checklist, Stage 3 handoff, rules manifest, and changelog.
-
-### Not Added Yet
-- No race/species traits.
-- No class features.
-- No XP system.
-- No combat.
-- No enemies.
-- No hotbar UI.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 2R — Stage 2 Final Lock + Stage 3 Handoff
-
-Status: confirmed working on iPhone.
-
-### Added
-- Added `STAGE3_HANDOFF.md`.
-- Added `Preview Stage 3 Handoff` button to the mobile Character Sheet.
-- Updated visible HUD stage labels to `Tales of Drak — Stage 2R`.
-- Locked Stage 2 as the D&D rules foundation stage before Stage 3 begins.
-
-### Current Placeholder Rules
-- This stage is a final lock and handoff only.
-- It does not add race/species features yet.
-- It does not add class features yet.
-- Stage 3 should begin with a tiny character identity shell only.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Stage 2 rules foundation, closeout checklist, rules manifest, and changelog.
-
-### Not Added Yet
-- No combat.
-- No enemies.
-- No class or race/species features.
-- No XP system.
-- No hotbar UI.
-- No automatic real-time cooldown ticking.
-- No damage application system.
 - No inventory, crafting, taming, quests, or dialogue.
 - No Skelerealms integration yet.
 
