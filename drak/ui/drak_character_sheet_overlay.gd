@@ -15,9 +15,10 @@ const REST_TRACKER_SCRIPT := preload("res://drak/rules/drak_rest_tracker.gd")
 const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progression.gd")
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
+const CHARACTER_IDENTITY_SCRIPT := preload("res://drak/character/drak_character_identity.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2R"
-const CURRENT_STAGE_STATUS := "Stage 2R: Stage 2 final lock and Stage 3 handoff."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3A"
+const CURRENT_STAGE_STATUS := "Stage 3A: character identity shell."
 const CURRENT_LEVEL := 1
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
@@ -35,6 +36,7 @@ var _rest_tracker: DrakRestTracker = REST_TRACKER_SCRIPT.new()
 var _level_progression: DrakLevelProgression = LEVEL_PROGRESSION_SCRIPT.new()
 var _spellcasting: DrakSpellcasting = SPELLCASTING_SCRIPT.new()
 var _rules_manifest: DrakRulesManifest = RULES_MANIFEST_SCRIPT.new()
+var _character_identity: DrakCharacterIdentity = CHARACTER_IDENTITY_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -98,7 +100,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2R Character Sheet"
+	title.text = "Stage 3A Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -110,6 +112,14 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
+	var identity_button := Button.new()
+	identity_button.name = "PreviewCharacterIdentityButton"
+	identity_button.text = "Preview Character Identity"
+	identity_button.custom_minimum_size = Vector2(270, 34)
+	identity_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	identity_button.pressed.connect(_preview_character_identity)
+	box.add_child(identity_button)
+
 	var handoff_button := Button.new()
 	handoff_button.name = "PreviewStage3HandoffButton"
 	handoff_button.text = "Preview Stage 3 Handoff"
@@ -117,14 +127,6 @@ func _build_overlay() -> void:
 	handoff_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	handoff_button.pressed.connect(_preview_stage3_handoff)
 	box.add_child(handoff_button)
-
-	var closeout_button := Button.new()
-	closeout_button.name = "PreviewStage2CloseoutButton"
-	closeout_button.text = "Preview Stage 2 Closeout"
-	closeout_button.custom_minimum_size = Vector2(270, 34)
-	closeout_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	closeout_button.pressed.connect(_preview_stage2_closeout)
-	box.add_child(closeout_button)
 
 	var rules_audit_button := Button.new()
 	rules_audit_button.name = "PreviewRulesAuditButton"
@@ -160,7 +162,7 @@ func _build_overlay() -> void:
 
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No handoff preview yet."
+	_check_result_text.text = "No identity preview yet."
 	_check_result_text.custom_minimum_size = Vector2(270, 46)
 	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -171,7 +173,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2R final lock. Stage 3 starts identity only next."
+	note.text = "Stage 3A identity only. No race traits/class features yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -186,13 +188,12 @@ func _build_overlay() -> void:
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
-	return "%s\n%s\n%s\n%s\n%s\n%s\n%s" % [
+	return "%s\n%s\n%s\n%s\n%s\n%s" % [
+		_character_identity.get_summary_text(),
 		_ability_scores.get_summary_text(),
 		_level_progression.get_summary_text(CURRENT_LEVEL),
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
-		_rest_tracker.get_summary_text(),
-		_spellcasting.get_summary_text(),
 		_rules_manifest.get_summary_text(),
 	]
 
@@ -204,11 +205,11 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
-func _preview_stage3_handoff() -> void:
-	_check_result_text.text = "Stage 3 handoff: add character identity shell first. No traits/features/combat yet."
+func _preview_character_identity() -> void:
+	_check_result_text.text = _character_identity.get_preview_text()
 
-func _preview_stage2_closeout() -> void:
-	_check_result_text.text = "Stage 2 locked: rules foundation stable, iPhone loop preserved."
+func _preview_stage3_handoff() -> void:
+	_check_result_text.text = "Stage 3 starts identity shell first. Traits/features come later."
 
 func _preview_rules_audit() -> void:
 	_check_result_text.text = _rules_manifest.get_audit_text()
@@ -258,6 +259,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q"]:
-		updated = updated.replace(stage_name, "Stage 2R")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R"]:
+		updated = updated.replace(stage_name, "Stage 3A")
 	return updated
