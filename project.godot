@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 DrakCharacterSheetOverlay="*res://drak/ui/drak_character_sheet_overlay.gd"
+DrakHotbarOverlay="*res://drak/ui/drak_hotbar_overlay.gd"
 
 [rendering]
 
