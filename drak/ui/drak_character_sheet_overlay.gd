@@ -1,12 +1,15 @@
 extends CanvasLayer
 
 const ABILITY_SCORES_SCRIPT := preload("res://drak/rules/drak_ability_scores.gd")
+const DICE_ROLLER_SCRIPT := preload("res://drak/rules/drak_dice_roller.gd")
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
+var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
 var _sheet_text: Label
+var _check_result_text: Label
 var _last_scene: Node
 
 func _ready() -> void:
@@ -41,10 +44,10 @@ func _build_overlay() -> void:
 	_sheet_panel = Panel.new()
 	_sheet_panel.name = "CharacterSheetPanel"
 	_sheet_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_sheet_panel.offset_left = -150.0
-	_sheet_panel.offset_top = -160.0
-	_sheet_panel.offset_right = 150.0
-	_sheet_panel.offset_bottom = 160.0
+	_sheet_panel.offset_left = -165.0
+	_sheet_panel.offset_top = -210.0
+	_sheet_panel.offset_right = 165.0
+	_sheet_panel.offset_bottom = 210.0
 	_sheet_panel.visible = false
 	_root.add_child(_sheet_panel)
 
@@ -59,19 +62,39 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2A Character Sheet"
+	title.text = "Stage 2B Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(title)
 
 	_sheet_text = Label.new()
 	_sheet_text.name = "AbilityScoresText"
-	_sheet_text.text = _ability_scores.get_summary_text()
+	_sheet_text.text = _get_sheet_text()
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(_sheet_text)
 
+	var roll_button := Button.new()
+	roll_button.name = "RollStrengthCheckButton"
+	roll_button.text = "Roll STR Check DC 10"
+	roll_button.custom_minimum_size = Vector2(260, 52)
+	roll_button.pressed.connect(_roll_strength_check)
+	box.add_child(roll_button)
+
+	var proficient_roll_button := Button.new()
+	proficient_roll_button.name = "RollProficientDexCheckButton"
+	proficient_roll_button.text = "Roll Proficient DEX Check DC 12"
+	proficient_roll_button.custom_minimum_size = Vector2(260, 52)
+	proficient_roll_button.pressed.connect(_roll_proficient_dex_check)
+	box.add_child(proficient_roll_button)
+
+	_check_result_text = Label.new()
+	_check_result_text.name = "CheckResultText"
+	_check_result_text.text = "No check rolled yet."
+	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	box.add_child(_check_result_text)
+
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Ability scores only. No class/race/combat yet."
+	note.text = "Stage 2B only: ability mods, proficiency bonus, and simple d20 checks."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	box.add_child(note)
@@ -83,13 +106,27 @@ func _build_overlay() -> void:
 	close_button.pressed.connect(_hide_sheet)
 	box.add_child(close_button)
 
+func _get_sheet_text() -> String:
+	return "%s\nLevel 1 Proficiency Bonus: +%d" % [
+		_ability_scores.get_summary_text(),
+		_dice_roller.get_proficiency_bonus(1),
+	]
+
 func _toggle_sheet() -> void:
 	_sheet_panel.visible = not _sheet_panel.visible
 	if _sheet_panel.visible:
-		_sheet_text.text = _ability_scores.get_summary_text()
+		_sheet_text.text = _get_sheet_text()
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _roll_strength_check() -> void:
+	var result := _dice_roller.roll_ability_check("Strength", _ability_scores.get_strength_modifier(), 1, false, 10)
+	_check_result_text.text = _dice_roller.format_check_result(result)
+
+func _roll_proficient_dex_check() -> void:
+	var result := _dice_roller.roll_ability_check("Dexterity", _ability_scores.get_dexterity_modifier(), 1, true, 12)
+	_check_result_text.text = _dice_roller.format_check_result(result)
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
