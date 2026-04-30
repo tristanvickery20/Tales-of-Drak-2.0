@@ -16,8 +16,8 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3F"
-const CURRENT_STAGE_STATUS := "Stage 3F: Rogue/Barbarian/Ranger shells."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3G"
+const CURRENT_STAGE_STATUS := "Stage 3G: character foundation audit."
 const CURRENT_LEVEL := 1
 
 const CHARACTER_NAME := "Drak Test Hero"
@@ -102,7 +102,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 3F Sheet"
+	title.text = "Stage 3G Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -114,6 +114,14 @@ func _build_overlay() -> void:
 	_sheet_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var stage3_audit_button := Button.new()
+	stage3_audit_button.name = "PreviewStage3AuditButton"
+	stage3_audit_button.text = "Stage 3 Audit"
+	stage3_audit_button.custom_minimum_size = Vector2(270, 32)
+	stage3_audit_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	stage3_audit_button.pressed.connect(_preview_stage3_audit)
+	box.add_child(stage3_audit_button)
 
 	var other_classes_button := Button.new()
 	other_classes_button.name = "PreviewOtherClassShellsButton"
@@ -184,7 +192,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Shells only. No combat, class features, or traits."
+	note.text = "Stage 3 audit only. No traits, features, or combat."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -199,7 +207,7 @@ func _build_overlay() -> void:
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
-	return "%s\nRaces: Elf / Variant Human / Dwarf / Orc\nClasses: Fighter / Wizard / Cleric / Warlock / Rogue / Barbarian / Ranger\nFighter 1: d10, STR/CON saves, inactive\nCasters: Wizard INT / Cleric WIS / Warlock CHA\nOther: Rogue / Barbarian / Ranger\nRules: %d foundations loaded" % [
+	return "%s\nRaces: Elf / Variant Human / Dwarf / Orc\nClasses: Fighter / Wizard / Cleric / Warlock / Rogue / Barbarian / Ranger\nStage 3 Modules: identity, race registry, class registry, Fighter, casters, other shells\nRules: %d foundations loaded" % [
 		_get_character_identity_summary(),
 		17,
 	]
@@ -219,6 +227,9 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _preview_stage3_audit() -> void:
+	_check_result_text.text = "Stage 3 audit: 6 character foundations loaded. No traits/features/combat yet."
 
 func _preview_other_class_shells() -> void:
 	_check_result_text.text = "Other shells: Rogue, Barbarian, Ranger. No Rage/Sneak Attack/Ranger magic yet."
@@ -270,6 +281,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E"]:
-		updated = updated.replace(stage_name, "Stage 3F")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F"]:
+		updated = updated.replace(stage_name, "Stage 3G")
 	return updated
