@@ -13,9 +13,10 @@ const COOLDOWN_TRACKER_SCRIPT := preload("res://drak/rules/drak_cooldown_tracker
 const DAMAGE_TYPES_SCRIPT := preload("res://drak/rules/drak_damage_types.gd")
 const REST_TRACKER_SCRIPT := preload("res://drak/rules/drak_rest_tracker.gd")
 const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progression.gd")
+const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2N"
-const CURRENT_STAGE_STATUS := "Stage 2N: level progression foundation."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2O"
+const CURRENT_STAGE_STATUS := "Stage 2O: spellcasting resource shell."
 const CURRENT_LEVEL := 1
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
@@ -31,6 +32,7 @@ var _cooldown_tracker: DrakCooldownTracker = COOLDOWN_TRACKER_SCRIPT.new()
 var _damage_types: DrakDamageTypes = DAMAGE_TYPES_SCRIPT.new()
 var _rest_tracker: DrakRestTracker = REST_TRACKER_SCRIPT.new()
 var _level_progression: DrakLevelProgression = LEVEL_PROGRESSION_SCRIPT.new()
+var _spellcasting: DrakSpellcasting = SPELLCASTING_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -94,7 +96,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2N Character Sheet"
+	title.text = "Stage 2O Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -105,6 +107,14 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var preview_spellcasting_button := Button.new()
+	preview_spellcasting_button.name = "PreviewSpellcastingButton"
+	preview_spellcasting_button.text = "Preview Spellcasting"
+	preview_spellcasting_button.custom_minimum_size = Vector2(270, 34)
+	preview_spellcasting_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	preview_spellcasting_button.pressed.connect(_preview_spellcasting)
+	box.add_child(preview_spellcasting_button)
 
 	var preview_level_button := Button.new()
 	preview_level_button.name = "PreviewLevelFiveButton"
@@ -146,24 +156,16 @@ func _build_overlay() -> void:
 	start_cooldown_button.pressed.connect(_start_test_cooldown)
 	box.add_child(start_cooldown_button)
 
-	var use_action_button := Button.new()
-	use_action_button.name = "UseActionButton"
-	use_action_button.text = "Use Action"
-	use_action_button.custom_minimum_size = Vector2(270, 34)
-	use_action_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	use_action_button.pressed.connect(_use_action)
-	box.add_child(use_action_button)
-
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No level preview yet."
+	_check_result_text.text = "No spellcasting preview yet."
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_check_result_text)
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2N: level/proficiency 1-5 only. No class/race features yet."
+	note.text = "Stage 2O: spellcasting shell only. No spells, class lists, spell attacks, or spell saves yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -178,15 +180,14 @@ func _build_overlay() -> void:
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
-	var proficiency_bonus := _level_progression.get_proficiency_bonus(CURRENT_LEVEL)
 	return "%s\n%s\n%s\n%s\n%s\n%s\n%s" % [
 		_ability_scores.get_summary_text(),
 		_level_progression.get_summary_text(CURRENT_LEVEL),
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
 		_rest_tracker.get_summary_text(),
+		_spellcasting.get_summary_text(),
 		_cooldown_tracker.get_summary_text(),
-		_damage_types.get_summary_text(),
 	]
 
 func _toggle_sheet() -> void:
@@ -196,6 +197,9 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _preview_spellcasting() -> void:
+	_check_result_text.text = _spellcasting.preview_spellcasting_shell()
 
 func _preview_level_five() -> void:
 	_check_result_text.text = _level_progression.preview_level(5)
@@ -208,7 +212,7 @@ func _spend_hit_die() -> void:
 func _long_rest() -> void:
 	_rest_tracker.long_rest()
 	_sheet_text.text = _get_sheet_text()
-	_check_result_text.text = "Long Rest complete.\nHit dice restored.\nNo HP is changed in Stage 2N."
+	_check_result_text.text = "Long Rest complete.\nHit dice restored.\nNo HP is changed in Stage 2O."
 
 func _preview_fire_damage() -> void:
 	_check_result_text.text = _damage_types.preview_damage("Fire", 4)
@@ -217,14 +221,6 @@ func _start_test_cooldown() -> void:
 	_cooldown_tracker.start_cooldown(DrakCooldownTracker.TEST_ABILITY_ID, 5.0)
 	_sheet_text.text = _get_sheet_text()
 	_check_result_text.text = "Test Ability cooldown started.\n" + _cooldown_tracker.get_summary_text()
-
-func _use_action() -> void:
-	var used := _action_economy.use_action()
-	_sheet_text.text = _get_sheet_text()
-	if used:
-		_check_result_text.text = "Action used.\n" + _action_economy.get_summary_text()
-	else:
-		_check_result_text.text = "Action already used. Reset turn to recover it.\n" + _action_economy.get_summary_text()
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
@@ -255,6 +251,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M"]:
-		updated = updated.replace(stage_name, "Stage 2N")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N"]:
+		updated = updated.replace(stage_name, "Stage 2O")
 	return updated
