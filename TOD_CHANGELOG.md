@@ -2,9 +2,44 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2Q — Mobile Sheet Cleanup + Closeout Checklist
+## Stage 2R — Stage 2 Final Lock + Stage 3 Handoff
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `STAGE3_HANDOFF.md`.
+- Added `Preview Stage 3 Handoff` button to the mobile Character Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2R`.
+- Locked Stage 2 as the D&D rules foundation stage before Stage 3 begins.
+
+### Current Placeholder Rules
+- This stage is a final lock and handoff only.
+- It does not add race/species features yet.
+- It does not add class features yet.
+- Stage 3 should begin with a tiny character identity shell only.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation, closeout checklist, rules manifest, and changelog.
+
+### Not Added Yet
+- No combat.
+- No enemies.
+- No class or race/species features.
+- No XP system.
+- No hotbar UI.
+- No automatic real-time cooldown ticking.
+- No damage application system.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2Q — Mobile Sheet Cleanup + Closeout Checklist
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `STAGE2_CLOSEOUT_CHECKLIST.md`.
