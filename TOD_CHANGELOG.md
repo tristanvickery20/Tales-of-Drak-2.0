@@ -2,9 +2,47 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2M — Hit Dice + Rest Foundation
+## Stage 2N — Level Progression Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_level_progression.gd`.
+- Added supported level range for the current vertical-slice rules foundation: levels 1 through 5.
+- Added level-based proficiency bonus helper.
+- Added `Preview Level 5` button to the mobile Character Sheet.
+- Added level/proficiency progression display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2N`.
+
+### Current Placeholder Rules
+- Supported level range is 1-5 only.
+- Current displayed level is level 1.
+- Level 1 proficiency bonus is +2.
+- Level 5 preview shows proficiency bonus +3.
+- No XP, leveling UI, class features, race/species features, spell progression, hit dice scaling, or ability score improvements are connected yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, action economy tracker, cooldown tracker, damage type registry, and hit dice/rest tracker.
+
+### Not Added Yet
+- No XP system.
+- No class or race/species features.
+- No hotbar UI.
+- No automatic real-time cooldown ticking.
+- No damage application system.
+- No combat.
+- No enemies.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2M — Hit Dice + Rest Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_rest_tracker.gd`.
