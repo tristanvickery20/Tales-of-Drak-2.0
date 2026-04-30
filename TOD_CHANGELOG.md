@@ -2,9 +2,55 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3B — Approved Race/Species Registry
+## Stage 3C — Approved Class Registry
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/character/drak_class_registry.gd`.
+- Added approved class registry with only:
+  - Fighter
+  - Wizard
+  - Cleric
+  - Warlock
+  - Rogue
+  - Barbarian
+  - Ranger
+- Added `Preview Class Registry` button to the mobile Character Sheet.
+- Added approved class summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 3C`.
+
+### Current Placeholder Rules
+- Class registry is data-only for now.
+- Current character still displays `Fighter` as a label only.
+- No class features are active yet.
+- No spellcasting class behavior is active yet.
+- No hit die/class HP changes are active yet.
+- No proficiencies, saves, equipment, or starting features are active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3A character identity display.
+- Stage 3B approved race/species registry display.
+
+### Not Added Yet
+- No class features.
+- No race/species traits.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3B — Approved Race/Species Registry
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/character/drak_race_species_registry.gd`.
@@ -35,7 +81,6 @@ Status: added, awaiting iPhone test confirmation.
 
 ### Not Added Yet
 - No race/species traits.
-- No class registry yet.
 - No class features.
 - No XP system.
 - No combat.
@@ -138,40 +183,6 @@ Status: confirmed working on iPhone.
 - Jump, Interact, Reset, Pause, Menu, Camera buttons.
 - Cave entrance and exit cave transitions.
 - Stage 2 rules foundation, closeout checklist, rules manifest, and changelog.
-
-### Not Added Yet
-- No combat.
-- No enemies.
-- No class or race/species features.
-- No XP system.
-- No hotbar UI.
-- No automatic real-time cooldown ticking.
-- No damage application system.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 2Q — Mobile Sheet Cleanup + Closeout Checklist
-
-Status: confirmed working on iPhone.
-
-### Added
-- Added `STAGE2_CLOSEOUT_CHECKLIST.md`.
-- Added `Preview Stage 2 Closeout` button to the mobile Character Sheet.
-- Updated Sheet text to act as a cleaner Stage 2 summary instead of a pile of loose tests.
-- Updated visible HUD stage labels to `Tales of Drak — Stage 2Q`.
-
-### Current Placeholder Rules
-- This stage is cleanup/documentation only.
-- It does not add new gameplay rules.
-- It prepares Stage 2 for closeout before Stage 3 race/species and class foundation.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Ability scores, modifiers, level range 1-5, proficiency bonus, HP, AC, hit dice/rest tracker, spellcasting shell, and rules manifest audit.
 
 ### Not Added Yet
 - No combat.
