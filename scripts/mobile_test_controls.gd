@@ -2,6 +2,7 @@ extends CanvasLayer
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu/main_menu.tscn"
 const STAGE_1D_ZONE_SCRIPT := preload("res://scripts/test_zone_layout.gd")
+const TEST_NPC_SCRIPT := preload("res://scripts/test_npc.gd")
 
 @onready var player: Node = get_node_or_null("../PlaceholderPlayer")
 @onready var camera: Node = get_node_or_null("../Camera3D")
@@ -17,6 +18,7 @@ var _paused := false
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_ensure_stage_1d_zone_exists()
+	_ensure_test_npc_exists()
 	_ensure_mobile_debug_controls_exist()
 	_refresh_optional_nodes()
 
@@ -55,7 +57,7 @@ func _ready() -> void:
 		pause_menu_button.pressed.connect(_on_back_to_menu_pressed)
 
 	_set_paused(false)
-	_set_status("Stage 1D: explore the tiny outdoor test zone.")
+	_set_status("Stage 1F: test NPC interaction.")
 
 func _process(_delta: float) -> void:
 	if not _paused and player != null and player.has_method("set_move_input"):
@@ -78,6 +80,48 @@ func _ensure_stage_1d_zone_exists() -> void:
 	zone_controller.set_script(STAGE_1D_ZONE_SCRIPT)
 	world.add_child(zone_controller)
 
+func _ensure_test_npc_exists() -> void:
+	var world := get_parent() as Node3D
+	if world == null:
+		return
+	if world.get_node_or_null("TestNPC") != null:
+		return
+
+	var npc := StaticBody3D.new()
+	npc.name = "TestNPC"
+	npc.position = Vector3(0, 0.95, -3.2)
+	npc.add_to_group("test_interactable")
+	npc.set_script(TEST_NPC_SCRIPT)
+	npc.npc_name = "Test NPC"
+	npc.interaction_line = "The road ahead is not ready yet."
+	world.add_child(npc)
+
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.name = "TestNPCMesh"
+	var mesh := CapsuleMesh.new()
+	mesh.radius = 0.45
+	mesh.height = 1.8
+	mesh_instance.mesh = mesh
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(0.9, 0.75, 0.18, 1)
+	mesh_instance.material_override = material
+	npc.add_child(mesh_instance)
+
+	var collision := CollisionShape3D.new()
+	collision.name = "TestNPCCollision"
+	var shape := CapsuleShape3D.new()
+	shape.radius = 0.45
+	shape.height = 1.8
+	collision.shape = shape
+	npc.add_child(collision)
+
+	var label := Label3D.new()
+	label.name = "TestNPCLabel"
+	label.text = "Test NPC"
+	label.position = Vector3(0, 1.3, 0)
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	npc.add_child(label)
+
 func _ensure_mobile_debug_controls_exist() -> void:
 	var controls := get_node_or_null("Controls") as Control
 	if controls == null:
@@ -92,7 +136,7 @@ func _ensure_mobile_debug_controls_exist() -> void:
 		new_debug_label.offset_right = -20.0
 		new_debug_label.offset_bottom = 130.0
 		new_debug_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		new_debug_label.text = "Stage 1D debug ready"
+		new_debug_label.text = "Stage 1F debug ready"
 		controls.add_child(new_debug_label)
 
 	if get_node_or_null("Controls/PauseButton") == null:
