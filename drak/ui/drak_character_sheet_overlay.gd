@@ -16,14 +16,15 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3B"
-const CURRENT_STAGE_STATUS := "Stage 3B: approved race/species registry."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3C"
+const CURRENT_STAGE_STATUS := "Stage 3C: approved class registry."
 const CURRENT_LEVEL := 1
 
 const CHARACTER_NAME := "Drak Test Hero"
 const RACE_SPECIES_NAME := "Variant Human"
 const CLASS_NAME := "Fighter"
 const APPROVED_RACE_SPECIES_TEXT := "Approved Race/Species: 4\nElf, Variant Human, Dwarf, Orc"
+const APPROVED_CLASSES_TEXT := "Approved Classes: 7\nFighter, Wizard, Cleric, Warlock, Rogue, Barbarian, Ranger"
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
@@ -103,7 +104,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 3B Character Sheet"
+	title.text = "Stage 3C Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -114,6 +115,14 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var class_registry_button := Button.new()
+	class_registry_button.name = "PreviewClassRegistryButton"
+	class_registry_button.text = "Preview Class Registry"
+	class_registry_button.custom_minimum_size = Vector2(270, 34)
+	class_registry_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	class_registry_button.pressed.connect(_preview_class_registry)
+	box.add_child(class_registry_button)
 
 	var race_registry_button := Button.new()
 	race_registry_button.name = "PreviewRaceSpeciesRegistryButton"
@@ -130,14 +139,6 @@ func _build_overlay() -> void:
 	identity_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	identity_button.pressed.connect(_preview_character_identity)
 	box.add_child(identity_button)
-
-	var handoff_button := Button.new()
-	handoff_button.name = "PreviewStage3HandoffButton"
-	handoff_button.text = "Preview Stage 3 Handoff"
-	handoff_button.custom_minimum_size = Vector2(270, 34)
-	handoff_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	handoff_button.pressed.connect(_preview_stage3_handoff)
-	box.add_child(handoff_button)
 
 	var rules_audit_button := Button.new()
 	rules_audit_button.name = "PreviewRulesAuditButton"
@@ -165,7 +166,7 @@ func _build_overlay() -> void:
 
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No race/species preview yet."
+	_check_result_text.text = "No class preview yet."
 	_check_result_text.custom_minimum_size = Vector2(270, 46)
 	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -176,7 +177,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 3B registry only. No race traits/stat changes yet."
+	note.text = "Stage 3C registry only. No class features/spells yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -194,9 +195,9 @@ func _get_sheet_text() -> String:
 	return "%s\n%s\n%s\n%s\n%s\n%s" % [
 		_get_character_identity_summary(),
 		APPROVED_RACE_SPECIES_TEXT,
+		APPROVED_CLASSES_TEXT,
 		_ability_scores.get_summary_text(),
 		_level_progression.get_summary_text(CURRENT_LEVEL),
-		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_rules_manifest.get_summary_text(),
 	]
 
@@ -216,14 +217,14 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
+func _preview_class_registry() -> void:
+	_check_result_text.text = "Approved: Fighter, Wizard, Cleric, Warlock, Rogue, Barbarian, Ranger. No features yet."
+
 func _preview_race_species_registry() -> void:
 	_check_result_text.text = "Approved: Elf, Variant Human, Dwarf, Orc. No traits/stat changes yet."
 
 func _preview_character_identity() -> void:
 	_check_result_text.text = "Identity: Variant Human Fighter 1. Labels only for now."
-
-func _preview_stage3_handoff() -> void:
-	_check_result_text.text = "Stage 3 adds identity, race registry, then class registry."
 
 func _preview_rules_audit() -> void:
 	_check_result_text.text = _rules_manifest.get_audit_text()
@@ -270,6 +271,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A"]:
-		updated = updated.replace(stage_name, "Stage 3B")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B"]:
+		updated = updated.replace(stage_name, "Stage 3C")
 	return updated
