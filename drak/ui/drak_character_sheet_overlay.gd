@@ -15,11 +15,14 @@ const REST_TRACKER_SCRIPT := preload("res://drak/rules/drak_rest_tracker.gd")
 const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progression.gd")
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
-const CHARACTER_IDENTITY_SCRIPT := preload("res://drak/character/drak_character_identity.gd")
 
 const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3A"
 const CURRENT_STAGE_STATUS := "Stage 3A: character identity shell."
 const CURRENT_LEVEL := 1
+
+const CHARACTER_NAME := "Drak Test Hero"
+const RACE_SPECIES_NAME := "Variant Human"
+const CLASS_NAME := "Fighter"
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
@@ -36,7 +39,6 @@ var _rest_tracker: DrakRestTracker = REST_TRACKER_SCRIPT.new()
 var _level_progression: DrakLevelProgression = LEVEL_PROGRESSION_SCRIPT.new()
 var _spellcasting: DrakSpellcasting = SPELLCASTING_SCRIPT.new()
 var _rules_manifest: DrakRulesManifest = RULES_MANIFEST_SCRIPT.new()
-var _character_identity: DrakCharacterIdentity = CHARACTER_IDENTITY_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -189,12 +191,20 @@ func _build_overlay() -> void:
 
 func _get_sheet_text() -> String:
 	return "%s\n%s\n%s\n%s\n%s\n%s" % [
-		_character_identity.get_summary_text(),
+		_get_character_identity_summary(),
 		_ability_scores.get_summary_text(),
 		_level_progression.get_summary_text(CURRENT_LEVEL),
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
 		_rules_manifest.get_summary_text(),
+	]
+
+func _get_character_identity_summary() -> String:
+	return "Character: %s\nRace/Species: %s\nClass: %s\nLevel: %d" % [
+		CHARACTER_NAME,
+		RACE_SPECIES_NAME,
+		CLASS_NAME,
+		CURRENT_LEVEL,
 	]
 
 func _toggle_sheet() -> void:
@@ -206,7 +216,7 @@ func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
 func _preview_character_identity() -> void:
-	_check_result_text.text = _character_identity.get_preview_text()
+	_check_result_text.text = "Stage 3A identity: Variant Human Fighter 1. No traits/features yet."
 
 func _preview_stage3_handoff() -> void:
 	_check_result_text.text = "Stage 3 starts identity shell first. Traits/features come later."
@@ -259,6 +269,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R"]:
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R"]:
 		updated = updated.replace(stage_name, "Stage 3A")
 	return updated
