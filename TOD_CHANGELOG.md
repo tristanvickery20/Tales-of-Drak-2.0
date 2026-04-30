@@ -2,9 +2,40 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2G — HP + Armor Class Foundation
+## Stage 2H — Saving Throw Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_saving_throws.gd`.
+- Added saving throw names for STR, DEX, CON, INT, WIS, and CHA.
+- Added `DEX Save DC 13` test button to the mobile Character Sheet.
+- Added saving throw summary text to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2H`.
+
+### Current Placeholder Rules
+- Dexterity saving throw uses DEX modifier only.
+- No saving throw proficiency is applied yet.
+- Proficiency will be connected later through class data.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, and AC.
+
+### Not Added Yet
+- No damage system.
+- No combat.
+- No classes or races.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2G — HP + Armor Class Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_hit_points.gd`.
