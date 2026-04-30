@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 const MAIN_MENU_SCENE := "res://scenes/main_menu/main_menu.tscn"
+const TEST_WORLD_SCENE := "res://scenes/test_world/test_world.tscn"
 const STAGE_1D_ZONE_SCRIPT := preload("res://scripts/test_zone_layout.gd")
 
 @onready var player: Node = get_node_or_null("../PlaceholderPlayer")
@@ -233,11 +234,10 @@ func _on_interact_pressed() -> void:
 		_set_status("Interact is not ready.")
 
 func _on_reset_pressed() -> void:
-	if player != null and player.has_method("reset_to_spawn"):
-		player.reset_to_spawn()
+	get_tree().paused = false
 	_move_input = Vector2.ZERO
 	_orbit_input = 0.0
-	_set_status("Player reset to spawn.")
+	get_tree().change_scene_to_file(TEST_WORLD_SCENE)
 
 func _on_pause_pressed() -> void:
 	_set_paused(true)
