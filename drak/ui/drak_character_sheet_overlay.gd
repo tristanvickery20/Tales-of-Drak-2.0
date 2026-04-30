@@ -4,14 +4,18 @@ const ABILITY_SCORES_SCRIPT := preload("res://drak/rules/drak_ability_scores.gd"
 const DICE_ROLLER_SCRIPT := preload("res://drak/rules/drak_dice_roller.gd")
 const SKILL_REGISTRY_SCRIPT := preload("res://drak/rules/drak_skill_registry.gd")
 const PASSIVE_SCORES_SCRIPT := preload("res://drak/rules/drak_passive_scores.gd")
+const HIT_POINTS_SCRIPT := preload("res://drak/rules/drak_hit_points.gd")
+const ARMOR_CLASS_SCRIPT := preload("res://drak/rules/drak_armor_class.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2F"
-const CURRENT_STAGE_STATUS := "Stage 2F: advantage/disadvantage rules test."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2G"
+const CURRENT_STAGE_STATUS := "Stage 2G: HP and Armor Class foundation."
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
 var _skill_registry: DrakSkillRegistry = SKILL_REGISTRY_SCRIPT.new()
 var _passive_scores: DrakPassiveScores = PASSIVE_SCORES_SCRIPT.new()
+var _hit_points: DrakHitPoints = HIT_POINTS_SCRIPT.new()
+var _armor_class: DrakArmorClass = ARMOR_CLASS_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -55,9 +59,9 @@ func _build_overlay() -> void:
 	_sheet_panel.name = "CharacterSheetPanel"
 	_sheet_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_sheet_panel.offset_left = -170.0
-	_sheet_panel.offset_top = -252.0
+	_sheet_panel.offset_top = -262.0
 	_sheet_panel.offset_right = 170.0
-	_sheet_panel.offset_bottom = 252.0
+	_sheet_panel.offset_bottom = 262.0
 	_sheet_panel.visible = false
 	_sheet_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.add_child(_sheet_panel)
@@ -66,15 +70,15 @@ func _build_overlay() -> void:
 	box.name = "CharacterSheetBox"
 	box.set_anchors_preset(Control.PRESET_FULL_RECT)
 	box.offset_left = 18.0
-	box.offset_top = 12.0
+	box.offset_top = 10.0
 	box.offset_right = -18.0
-	box.offset_bottom = -12.0
+	box.offset_bottom = -10.0
 	box.mouse_filter = Control.MOUSE_FILTER_PASS
 	_sheet_panel.add_child(box)
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2F Character Sheet"
+	title.text = "Stage 2G Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -86,18 +90,18 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
-	var normal_button := Button.new()
-	normal_button.name = "RollNormalStrengthCheckButton"
-	normal_button.text = "Normal STR DC 12"
-	normal_button.custom_minimum_size = Vector2(270, 42)
-	normal_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	normal_button.pressed.connect(_roll_normal_strength_check)
-	box.add_child(normal_button)
+	var hp_ac_button := Button.new()
+	hp_ac_button.name = "ShowHpAcButton"
+	hp_ac_button.text = "Show HP / AC"
+	hp_ac_button.custom_minimum_size = Vector2(270, 40)
+	hp_ac_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	hp_ac_button.pressed.connect(_show_hp_ac)
+	box.add_child(hp_ac_button)
 
 	var advantage_button := Button.new()
 	advantage_button.name = "RollAdvantageStrengthCheckButton"
 	advantage_button.text = "Advantage STR DC 12"
-	advantage_button.custom_minimum_size = Vector2(270, 42)
+	advantage_button.custom_minimum_size = Vector2(270, 40)
 	advantage_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	advantage_button.pressed.connect(_roll_advantage_strength_check)
 	box.add_child(advantage_button)
@@ -105,7 +109,7 @@ func _build_overlay() -> void:
 	var disadvantage_button := Button.new()
 	disadvantage_button.name = "RollDisadvantageStrengthCheckButton"
 	disadvantage_button.text = "Disadvantage STR DC 12"
-	disadvantage_button.custom_minimum_size = Vector2(270, 42)
+	disadvantage_button.custom_minimum_size = Vector2(270, 40)
 	disadvantage_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	disadvantage_button.pressed.connect(_roll_disadvantage_strength_check)
 	box.add_child(disadvantage_button)
@@ -113,7 +117,7 @@ func _build_overlay() -> void:
 	var athletics_button := Button.new()
 	athletics_button.name = "RollAthleticsCheckButton"
 	athletics_button.text = "Athletics DC 12"
-	athletics_button.custom_minimum_size = Vector2(270, 42)
+	athletics_button.custom_minimum_size = Vector2(270, 40)
 	athletics_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	athletics_button.pressed.connect(_roll_athletics_check)
 	box.add_child(athletics_button)
@@ -121,7 +125,7 @@ func _build_overlay() -> void:
 	var perception_button := Button.new()
 	perception_button.name = "ShowPassivePerceptionButton"
 	perception_button.text = "Show Passive Perception"
-	perception_button.custom_minimum_size = Vector2(270, 42)
+	perception_button.custom_minimum_size = Vector2(270, 40)
 	perception_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	perception_button.pressed.connect(_show_passive_perception)
 	box.add_child(perception_button)
@@ -135,7 +139,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2F: advantage/disadvantage added to checks. No combat/classes/races yet."
+	note.text = "Stage 2G: HP and AC display only. No damage/combat/classes/races yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -144,17 +148,18 @@ func _build_overlay() -> void:
 	var close_button := Button.new()
 	close_button.name = "CloseCharacterSheetButton"
 	close_button.text = "Close"
-	close_button.custom_minimum_size = Vector2(220, 44)
+	close_button.custom_minimum_size = Vector2(220, 42)
 	close_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	close_button.pressed.connect(_hide_sheet)
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
 	var proficiency_bonus := _dice_roller.get_proficiency_bonus(1)
-	return "%s\nLevel 1 Proficiency Bonus: +%d\n%s\n%s" % [
+	return "%s\nLevel 1 Proficiency Bonus: +%d\n%s\n%s\n%s" % [
 		_ability_scores.get_summary_text(),
 		proficiency_bonus,
-		_skill_registry.get_summary_text(),
+		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
+		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
 		_passive_scores.get_summary_text(_ability_scores.get_wisdom_modifier(), proficiency_bonus, false),
 	]
 
@@ -166,9 +171,11 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
-func _roll_normal_strength_check() -> void:
-	var result := _dice_roller.roll_ability_check("Strength", _ability_scores.get_strength_modifier(), 1, false, 12)
-	_check_result_text.text = _dice_roller.format_check_result(result)
+func _show_hp_ac() -> void:
+	_check_result_text.text = "%s\n%s" % [
+		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
+		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
+	]
 
 func _roll_advantage_strength_check() -> void:
 	var result := _dice_roller.roll_ability_check("Strength", _ability_scores.get_strength_modifier(), 1, false, 12, DrakDiceRoller.ROLL_ADVANTAGE)
@@ -220,6 +227,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E"]:
-		updated = updated.replace(stage_name, "Stage 2F")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F"]:
+		updated = updated.replace(stage_name, "Stage 2G")
 	return updated
