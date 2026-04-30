@@ -2,9 +2,11 @@ extends CanvasLayer
 
 const ABILITY_SCORES_SCRIPT := preload("res://drak/rules/drak_ability_scores.gd")
 const DICE_ROLLER_SCRIPT := preload("res://drak/rules/drak_dice_roller.gd")
+const SKILL_REGISTRY_SCRIPT := preload("res://drak/rules/drak_skill_registry.gd")
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
+var _skill_registry: DrakSkillRegistry = SKILL_REGISTRY_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -47,9 +49,9 @@ func _build_overlay() -> void:
 	_sheet_panel.name = "CharacterSheetPanel"
 	_sheet_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_sheet_panel.offset_left = -165.0
-	_sheet_panel.offset_top = -210.0
+	_sheet_panel.offset_top = -230.0
 	_sheet_panel.offset_right = 165.0
-	_sheet_panel.offset_bottom = 210.0
+	_sheet_panel.offset_bottom = 230.0
 	_sheet_panel.visible = false
 	_sheet_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.add_child(_sheet_panel)
@@ -66,7 +68,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2B Character Sheet"
+	title.text = "Stage 2D Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -81,15 +83,23 @@ func _build_overlay() -> void:
 	var roll_button := Button.new()
 	roll_button.name = "RollStrengthCheckButton"
 	roll_button.text = "Roll STR Check DC 10"
-	roll_button.custom_minimum_size = Vector2(260, 52)
+	roll_button.custom_minimum_size = Vector2(260, 48)
 	roll_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	roll_button.pressed.connect(_roll_strength_check)
 	box.add_child(roll_button)
 
+	var athletics_button := Button.new()
+	athletics_button.name = "RollAthleticsCheckButton"
+	athletics_button.text = "Roll Athletics DC 12"
+	athletics_button.custom_minimum_size = Vector2(260, 48)
+	athletics_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	athletics_button.pressed.connect(_roll_athletics_check)
+	box.add_child(athletics_button)
+
 	var proficient_roll_button := Button.new()
 	proficient_roll_button.name = "RollProficientDexCheckButton"
-	proficient_roll_button.text = "Roll Proficient DEX Check DC 12"
-	proficient_roll_button.custom_minimum_size = Vector2(260, 52)
+	proficient_roll_button.text = "Roll Proficient DEX DC 12"
+	proficient_roll_button.custom_minimum_size = Vector2(260, 48)
 	proficient_roll_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	proficient_roll_button.pressed.connect(_roll_proficient_dex_check)
 	box.add_child(proficient_roll_button)
@@ -103,7 +113,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2B only: ability mods, proficiency bonus, and simple d20 checks."
+	note.text = "Stage 2D: skill registry exists, but only Athletics is tested here."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -112,15 +122,16 @@ func _build_overlay() -> void:
 	var close_button := Button.new()
 	close_button.name = "CloseCharacterSheetButton"
 	close_button.text = "Close"
-	close_button.custom_minimum_size = Vector2(220, 52)
+	close_button.custom_minimum_size = Vector2(220, 48)
 	close_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	close_button.pressed.connect(_hide_sheet)
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
-	return "%s\nLevel 1 Proficiency Bonus: +%d" % [
+	return "%s\nLevel 1 Proficiency Bonus: +%d\n%s" % [
 		_ability_scores.get_summary_text(),
 		_dice_roller.get_proficiency_bonus(1),
+		_skill_registry.get_summary_text(),
 	]
 
 func _toggle_sheet() -> void:
@@ -133,6 +144,12 @@ func _hide_sheet() -> void:
 
 func _roll_strength_check() -> void:
 	var result := _dice_roller.roll_ability_check("Strength", _ability_scores.get_strength_modifier(), 1, false, 10)
+	_check_result_text.text = _dice_roller.format_check_result(result)
+
+func _roll_athletics_check() -> void:
+	var skill_name := "Athletics"
+	var ability_name := _skill_registry.get_ability_for_skill(skill_name)
+	var result := _dice_roller.roll_ability_check(skill_name + " (" + ability_name + ")", _ability_scores.get_modifier_for_ability(ability_name), 1, true, 12)
 	_check_result_text.text = _dice_roller.format_check_result(result)
 
 func _roll_proficient_dex_check() -> void:
