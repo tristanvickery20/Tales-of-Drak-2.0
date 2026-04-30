@@ -16,8 +16,8 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3G"
-const CURRENT_STAGE_STATUS := "Stage 3G: character foundation audit."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4A"
+const CURRENT_STAGE_STATUS := "Stage 4A: hotbar/combat foundation plan."
 const CURRENT_LEVEL := 1
 
 const CHARACTER_NAME := "Drak Test Hero"
@@ -102,7 +102,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 3G Sheet"
+	title.text = "Stage 4A Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -115,6 +115,14 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
+	var stage4_plan_button := Button.new()
+	stage4_plan_button.name = "PreviewStage4PlanButton"
+	stage4_plan_button.text = "Stage 4 Plan"
+	stage4_plan_button.custom_minimum_size = Vector2(270, 32)
+	stage4_plan_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	stage4_plan_button.pressed.connect(_preview_stage4_plan)
+	box.add_child(stage4_plan_button)
+
 	var stage3_audit_button := Button.new()
 	stage3_audit_button.name = "PreviewStage3AuditButton"
 	stage3_audit_button.text = "Stage 3 Audit"
@@ -122,22 +130,6 @@ func _build_overlay() -> void:
 	stage3_audit_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	stage3_audit_button.pressed.connect(_preview_stage3_audit)
 	box.add_child(stage3_audit_button)
-
-	var other_classes_button := Button.new()
-	other_classes_button.name = "PreviewOtherClassShellsButton"
-	other_classes_button.text = "Other Classes"
-	other_classes_button.custom_minimum_size = Vector2(270, 32)
-	other_classes_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	other_classes_button.pressed.connect(_preview_other_class_shells)
-	box.add_child(other_classes_button)
-
-	var caster_button := Button.new()
-	caster_button.name = "PreviewCasterShellsButton"
-	caster_button.text = "Casters"
-	caster_button.custom_minimum_size = Vector2(270, 32)
-	caster_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	caster_button.pressed.connect(_preview_caster_shells)
-	box.add_child(caster_button)
 
 	var fighter_shell_button := Button.new()
 	fighter_shell_button.name = "PreviewFighterLevelOneShellButton"
@@ -192,7 +184,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 3 audit only. No traits, features, or combat."
+	note.text = "Stage 4A plan only. No combat/damage/enemies yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -207,9 +199,8 @@ func _build_overlay() -> void:
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
-	return "%s\nRaces: Elf / Variant Human / Dwarf / Orc\nClasses: Fighter / Wizard / Cleric / Warlock / Rogue / Barbarian / Ranger\nStage 3 Modules: identity, race registry, class registry, Fighter, casters, other shells\nRules: %d foundations loaded" % [
+	return "%s\nStage 4A: real-time hotbar foundation\nHotbar slots planned: 8 inactive labels\nCombat style: SWTOR-style buttons + cooldowns\nRules: D&D math backbone, not turn-based" % [
 		_get_character_identity_summary(),
-		17,
 	]
 
 func _get_character_identity_summary() -> String:
@@ -228,17 +219,14 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
+func _preview_stage4_plan() -> void:
+	_check_result_text.text = "Stage 4A: 8 inactive hotbar slots planned. No abilities, enemies, or damage yet."
+
 func _preview_stage3_audit() -> void:
-	_check_result_text.text = "Stage 3 audit: 6 character foundations loaded. No traits/features/combat yet."
-
-func _preview_other_class_shells() -> void:
-	_check_result_text.text = "Other shells: Rogue, Barbarian, Ranger. No Rage/Sneak Attack/Ranger magic yet."
-
-func _preview_caster_shells() -> void:
-	_check_result_text.text = "Caster shells: Wizard INT, Cleric WIS, Warlock CHA. No spells/slots yet."
+	_check_result_text.text = "Stage 3 preserved: identity, approved races/classes, and class shells."
 
 func _preview_fighter_level_one_shell() -> void:
-	_check_result_text.text = "Fighter 1 shell: d10, STR/CON saves as labels only. No features/combat."
+	_check_result_text.text = "Fighter 1 shell preserved. No active features/combat yet."
 
 func _preview_class_registry() -> void:
 	_check_result_text.text = "Approved classes: Fighter, Wizard, Cleric, Warlock, Rogue, Barbarian, Ranger."
@@ -250,7 +238,7 @@ func _preview_character_identity() -> void:
 	_check_result_text.text = "Identity: Variant Human Fighter 1. Labels only for now."
 
 func _preview_rules_audit() -> void:
-	_check_result_text.text = "Stage 2 rules foundation preserved. No combat/classes active yet."
+	_check_result_text.text = "Stage 2 rules foundation preserved. D&D rules support future real-time combat."
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
@@ -281,6 +269,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F"]:
-		updated = updated.replace(stage_name, "Stage 3G")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G"]:
+		updated = updated.replace(stage_name, "Stage 4A")
 	return updated
