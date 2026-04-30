@@ -16,8 +16,8 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2P"
-const CURRENT_STAGE_STATUS := "Stage 2P: rules manifest and audit."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2Q"
+const CURRENT_STAGE_STATUS := "Stage 2Q: mobile Sheet cleanup and closeout checklist."
 const CURRENT_LEVEL := 1
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
@@ -98,7 +98,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2P Character Sheet"
+	title.text = "Stage 2Q Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -109,6 +109,14 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var closeout_button := Button.new()
+	closeout_button.name = "PreviewStage2CloseoutButton"
+	closeout_button.text = "Preview Stage 2 Closeout"
+	closeout_button.custom_minimum_size = Vector2(270, 34)
+	closeout_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	closeout_button.pressed.connect(_preview_stage2_closeout)
+	box.add_child(closeout_button)
 
 	var rules_audit_button := Button.new()
 	rules_audit_button.name = "PreviewRulesAuditButton"
@@ -150,17 +158,9 @@ func _build_overlay() -> void:
 	long_rest_button.pressed.connect(_long_rest)
 	box.add_child(long_rest_button)
 
-	var start_cooldown_button := Button.new()
-	start_cooldown_button.name = "StartCooldownButton"
-	start_cooldown_button.text = "Start 5s Cooldown"
-	start_cooldown_button.custom_minimum_size = Vector2(270, 34)
-	start_cooldown_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	start_cooldown_button.pressed.connect(_start_test_cooldown)
-	box.add_child(start_cooldown_button)
-
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No audit preview yet."
+	_check_result_text.text = "No closeout preview yet."
 	_check_result_text.custom_minimum_size = Vector2(270, 46)
 	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -171,7 +171,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2P audit only. No combat/classes/races yet."
+	note.text = "Stage 2Q cleanup only. Stage 3 begins race/class foundation later."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -204,6 +204,9 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
+func _preview_stage2_closeout() -> void:
+	_check_result_text.text = "Stage 2 closeout: iPhone loop, rules summary, changelog, and no unrelated rewrites."
+
 func _preview_rules_audit() -> void:
 	_check_result_text.text = _rules_manifest.get_audit_text()
 
@@ -225,11 +228,6 @@ func _long_rest() -> void:
 	_rest_tracker.long_rest()
 	_sheet_text.text = _get_sheet_text()
 	_check_result_text.text = "Long Rest: hit dice restored. HP unchanged."
-
-func _start_test_cooldown() -> void:
-	_cooldown_tracker.start_cooldown(DrakCooldownTracker.TEST_ABILITY_ID, 5.0)
-	_sheet_text.text = _get_sheet_text()
-	_check_result_text.text = "Test Ability cooldown: 5.0s started."
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
@@ -260,6 +258,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O"]:
-		updated = updated.replace(stage_name, "Stage 2P")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P"]:
+		updated = updated.replace(stage_name, "Stage 2Q")
 	return updated
