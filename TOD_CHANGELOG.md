@@ -2,9 +2,42 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2H — Saving Throw Foundation
+## Stage 2I — Condition Tracker Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_condition_tracker.gd`.
+- Added a tiny condition tracker foundation.
+- Added `Toggle Prone` button to the mobile Character Sheet.
+- Added active condition display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2I`.
+
+### Current Placeholder Rules
+- Only the `Prone` condition is implemented for testing.
+- Prone can be toggled on/off in the Sheet.
+- No mechanical effects are applied yet.
+- The fuller D&D condition registry will be expanded later in smaller safe chunks.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, and Dexterity saving throw test.
+
+### Not Added Yet
+- No condition mechanical effects.
+- No damage system.
+- No combat.
+- No classes or races.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2H — Saving Throw Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_saving_throws.gd`.
