@@ -158,14 +158,18 @@ func _build_overlay() -> void:
 
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No spellcasting preview yet."
+	_check_result_text.text = "No preview yet."
+	_check_result_text.custom_minimum_size = Vector2(270, 46)
+	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_check_result_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_check_result_text)
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2O: spellcasting shell only. No spells, class lists, spell attacks, or spell saves yet."
+	note.text = "Stage 2O shell only. No spells/class lists yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -199,28 +203,31 @@ func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
 func _preview_spellcasting() -> void:
-	_check_result_text.text = _spellcasting.preview_spellcasting_shell()
+	_check_result_text.text = "Spellcasting shell ready. No spells or spell slots active yet."
 
 func _preview_level_five() -> void:
-	_check_result_text.text = _level_progression.preview_level(5)
+	_check_result_text.text = "Level 5 preview: Proficiency Bonus +3. No class/race features yet."
 
 func _spend_hit_die() -> void:
 	var result := _rest_tracker.spend_hit_die(_ability_scores.get_constitution_modifier())
 	_sheet_text.text = _get_sheet_text()
-	_check_result_text.text = _rest_tracker.format_spend_result(result)
+	if bool(result.get("spent", false)):
+		_check_result_text.text = "Hit Die spent. Preview healing: %d. HP unchanged." % int(result.get("preview_healing", 0))
+	else:
+		_check_result_text.text = "No hit dice left. Use Long Rest to restore."
 
 func _long_rest() -> void:
 	_rest_tracker.long_rest()
 	_sheet_text.text = _get_sheet_text()
-	_check_result_text.text = "Long Rest complete.\nHit dice restored.\nNo HP is changed in Stage 2O."
+	_check_result_text.text = "Long Rest: hit dice restored. HP unchanged."
 
 func _preview_fire_damage() -> void:
-	_check_result_text.text = _damage_types.preview_damage("Fire", 4)
+	_check_result_text.text = "Preview: 4 Fire damage. HP unchanged."
 
 func _start_test_cooldown() -> void:
 	_cooldown_tracker.start_cooldown(DrakCooldownTracker.TEST_ABILITY_ID, 5.0)
 	_sheet_text.text = _get_sheet_text()
-	_check_result_text.text = "Test Ability cooldown started.\n" + _cooldown_tracker.get_summary_text()
+	_check_result_text.text = "Test Ability cooldown: 5.0s started."
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
