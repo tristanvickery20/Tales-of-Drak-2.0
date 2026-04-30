@@ -2,9 +2,44 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2K — Cooldown Tracker Foundation
+## Stage 2L — Damage Type Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_damage_types.gd`.
+- Added a standard damage type registry.
+- Added `Preview Fire Damage` button to the mobile Character Sheet.
+- Added damage type foundation display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2L`.
+
+### Current Placeholder Rules
+- Damage types are registered but do not affect HP yet.
+- `Preview Fire Damage` shows a harmless preview only.
+- No enemy, combat, attack, spell, resistance, immunity, vulnerability, or HP reduction system uses this yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, action economy tracker, and cooldown tracker.
+
+### Not Added Yet
+- No HP reduction.
+- No hotbar UI.
+- No automatic real-time cooldown ticking.
+- No damage application system.
+- No combat.
+- No enemies.
+- No classes or races.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2K — Cooldown Tracker Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_cooldown_tracker.gd`.
