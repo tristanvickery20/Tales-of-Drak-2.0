@@ -16,8 +16,8 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3D"
-const CURRENT_STAGE_STATUS := "Stage 3D: Fighter level 1 shell."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3E"
+const CURRENT_STAGE_STATUS := "Stage 3E: caster identity shells."
 const CURRENT_LEVEL := 1
 
 const CHARACTER_NAME := "Drak Test Hero"
@@ -102,7 +102,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 3D Sheet"
+	title.text = "Stage 3E Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -114,6 +114,14 @@ func _build_overlay() -> void:
 	_sheet_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var caster_button := Button.new()
+	caster_button.name = "PreviewCasterShellsButton"
+	caster_button.text = "Casters"
+	caster_button.custom_minimum_size = Vector2(270, 32)
+	caster_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	caster_button.pressed.connect(_preview_caster_shells)
+	box.add_child(caster_button)
 
 	var fighter_shell_button := Button.new()
 	fighter_shell_button.name = "PreviewFighterLevelOneShellButton"
@@ -168,7 +176,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Shell only. No active combat/features."
+	note.text = "Shells only. No spells, slots, combat, or features."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -183,7 +191,7 @@ func _build_overlay() -> void:
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
-	return "%s\nRaces: Elf / Variant Human / Dwarf / Orc\nClasses: Fighter / Wizard / Cleric / Warlock / Rogue / Barbarian / Ranger\nFighter 1: d10, STR/CON saves, features inactive\nRules: %d foundations loaded" % [
+	return "%s\nRaces: Elf / Variant Human / Dwarf / Orc\nClasses: Fighter / Wizard / Cleric / Warlock / Rogue / Barbarian / Ranger\nFighter 1: d10, STR/CON saves, inactive\nCasters: Wizard INT / Cleric WIS / Warlock CHA\nRules: %d foundations loaded" % [
 		_get_character_identity_summary(),
 		17,
 	]
@@ -203,6 +211,9 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _preview_caster_shells() -> void:
+	_check_result_text.text = "Caster shells: Wizard INT, Cleric WIS, Warlock CHA. No spells/slots yet."
 
 func _preview_fighter_level_one_shell() -> void:
 	_check_result_text.text = "Fighter 1 shell: d10, STR/CON saves as labels only. No features/combat."
@@ -248,6 +259,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C"]:
-		updated = updated.replace(stage_name, "Stage 3D")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D"]:
+		updated = updated.replace(stage_name, "Stage 3E")
 	return updated
