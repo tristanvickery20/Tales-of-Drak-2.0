@@ -2,9 +2,44 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2O — Spellcasting Resource Shell
+## Stage 2P — Rules Manifest + Audit Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_rules_manifest.gd`.
+- Added a Stage 2 rules manifest listing the foundations currently loaded.
+- Added `Preview Rules Audit` button to the mobile Character Sheet.
+- Added rules manifest summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2P`.
+
+### Current Placeholder Rules
+- Rules manifest is an organization/audit layer only.
+- It does not change gameplay.
+- It confirms the current Stage 2 foundation modules exist before moving into later systems.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, level range 1-5, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, action economy tracker, cooldown tracker, damage type registry, hit dice/rest tracker, and spellcasting shell.
+
+### Not Added Yet
+- No combat.
+- No enemies.
+- No class or race/species features.
+- No XP system.
+- No hotbar UI.
+- No automatic real-time cooldown ticking.
+- No damage application system.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2O — Spellcasting Resource Shell
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_spellcasting.gd`.
