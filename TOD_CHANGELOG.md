@@ -2,9 +2,48 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2I — Condition Tracker Foundation
+## Stage 2J — Action Economy Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_action_economy.gd`.
+- Added action economy tracking for:
+  - Action
+  - Bonus Action
+  - Reaction
+  - Movement remaining in feet
+- Added `Use Action` button to the mobile Character Sheet.
+- Added `Reset Turn` button to the mobile Character Sheet.
+- Added action economy display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2J`.
+
+### Current Placeholder Rules
+- A turn starts with Action, Bonus Action, Reaction, and 30 feet of movement available.
+- `Use Action` spends the Action only.
+- `Reset Turn` restores the turn resources.
+- No hotbar, combat, enemy, damage, ability, or cooldown system uses this yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, and Prone condition toggle.
+
+### Not Added Yet
+- No hotbar.
+- No damage system.
+- No combat.
+- No enemies.
+- No classes or races.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2I — Condition Tracker Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_condition_tracker.gd`.
