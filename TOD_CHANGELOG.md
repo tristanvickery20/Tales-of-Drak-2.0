@@ -2,9 +2,46 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2J — Action Economy Foundation
+## Stage 2K — Cooldown Tracker Foundation
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_cooldown_tracker.gd`.
+- Added a simple cooldown tracker for future real-time hotbar abilities.
+- Added `Start 5s Cooldown` button to the mobile Character Sheet.
+- Added `Tick Cooldown -1s` button to the mobile Character Sheet.
+- Added cooldown display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2K`.
+
+### Current Placeholder Rules
+- Test Ability starts ready.
+- `Start 5s Cooldown` sets Test Ability to 5.0 seconds remaining.
+- `Tick Cooldown -1s` manually reduces remaining cooldown by 1 second.
+- This is manual for testing only. Later gameplay can tick cooldowns automatically in real time.
+- Important design note: Tales of Drak combat is not turn-based. D&D action economy is a rules backbone; player-facing combat is intended to be real-time SWTOR-style hotbar/button combat with cooldowns.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, and action economy tracker.
+
+### Not Added Yet
+- No hotbar UI.
+- No automatic real-time cooldown ticking.
+- No damage system.
+- No combat.
+- No enemies.
+- No classes or races.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2J — Action Economy Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_action_economy.gd`.
@@ -23,6 +60,7 @@ Status: added, awaiting iPhone test confirmation.
 - `Use Action` spends the Action only.
 - `Reset Turn` restores the turn resources.
 - No hotbar, combat, enemy, damage, ability, or cooldown system uses this yet.
+- Important design note: this does not mean Tales of Drak combat is turn-based. It is a D&D rules resource tracker that can later support real-time hotbar combat.
 
 ### Preserved
 - iPhone Safari/GitHub Pages test loop.
