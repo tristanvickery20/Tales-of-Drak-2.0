@@ -8,9 +8,10 @@ const HIT_POINTS_SCRIPT := preload("res://drak/rules/drak_hit_points.gd")
 const ARMOR_CLASS_SCRIPT := preload("res://drak/rules/drak_armor_class.gd")
 const SAVING_THROWS_SCRIPT := preload("res://drak/rules/drak_saving_throws.gd")
 const CONDITION_TRACKER_SCRIPT := preload("res://drak/rules/drak_condition_tracker.gd")
+const ACTION_ECONOMY_SCRIPT := preload("res://drak/rules/drak_action_economy.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2I"
-const CURRENT_STAGE_STATUS := "Stage 2I: condition tracker foundation."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2J"
+const CURRENT_STAGE_STATUS := "Stage 2J: action economy foundation."
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
@@ -20,6 +21,7 @@ var _hit_points: DrakHitPoints = HIT_POINTS_SCRIPT.new()
 var _armor_class: DrakArmorClass = ARMOR_CLASS_SCRIPT.new()
 var _saving_throws: DrakSavingThrows = SAVING_THROWS_SCRIPT.new()
 var _condition_tracker: DrakConditionTracker = CONDITION_TRACKER_SCRIPT.new()
+var _action_economy: DrakActionEconomy = ACTION_ECONOMY_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -30,6 +32,7 @@ var _last_scene: Node
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 20
+	_action_economy.reset_turn()
 	_build_overlay()
 	_update_visibility()
 
@@ -63,9 +66,9 @@ func _build_overlay() -> void:
 	_sheet_panel.name = "CharacterSheetPanel"
 	_sheet_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_sheet_panel.offset_left = -170.0
-	_sheet_panel.offset_top = -262.0
+	_sheet_panel.offset_top = -272.0
 	_sheet_panel.offset_right = 170.0
-	_sheet_panel.offset_bottom = 262.0
+	_sheet_panel.offset_bottom = 272.0
 	_sheet_panel.visible = false
 	_sheet_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.add_child(_sheet_panel)
@@ -82,7 +85,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2I Character Sheet"
+	title.text = "Stage 2J Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -94,10 +97,26 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
+	var use_action_button := Button.new()
+	use_action_button.name = "UseActionButton"
+	use_action_button.text = "Use Action"
+	use_action_button.custom_minimum_size = Vector2(270, 38)
+	use_action_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	use_action_button.pressed.connect(_use_action)
+	box.add_child(use_action_button)
+
+	var reset_turn_button := Button.new()
+	reset_turn_button.name = "ResetTurnButton"
+	reset_turn_button.text = "Reset Turn"
+	reset_turn_button.custom_minimum_size = Vector2(270, 38)
+	reset_turn_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	reset_turn_button.pressed.connect(_reset_turn)
+	box.add_child(reset_turn_button)
+
 	var prone_button := Button.new()
 	prone_button.name = "ToggleProneButton"
 	prone_button.text = "Toggle Prone"
-	prone_button.custom_minimum_size = Vector2(270, 40)
+	prone_button.custom_minimum_size = Vector2(270, 38)
 	prone_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	prone_button.pressed.connect(_toggle_prone)
 	box.add_child(prone_button)
@@ -105,7 +124,7 @@ func _build_overlay() -> void:
 	var save_button := Button.new()
 	save_button.name = "RollDexteritySaveButton"
 	save_button.text = "DEX Save DC 13"
-	save_button.custom_minimum_size = Vector2(270, 40)
+	save_button.custom_minimum_size = Vector2(270, 38)
 	save_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	save_button.pressed.connect(_roll_dexterity_save)
 	box.add_child(save_button)
@@ -113,7 +132,7 @@ func _build_overlay() -> void:
 	var hp_ac_button := Button.new()
 	hp_ac_button.name = "ShowHpAcButton"
 	hp_ac_button.text = "Show HP / AC"
-	hp_ac_button.custom_minimum_size = Vector2(270, 40)
+	hp_ac_button.custom_minimum_size = Vector2(270, 38)
 	hp_ac_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	hp_ac_button.pressed.connect(_show_hp_ac)
 	box.add_child(hp_ac_button)
@@ -121,29 +140,21 @@ func _build_overlay() -> void:
 	var athletics_button := Button.new()
 	athletics_button.name = "RollAthleticsCheckButton"
 	athletics_button.text = "Athletics DC 12"
-	athletics_button.custom_minimum_size = Vector2(270, 40)
+	athletics_button.custom_minimum_size = Vector2(270, 38)
 	athletics_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	athletics_button.pressed.connect(_roll_athletics_check)
 	box.add_child(athletics_button)
 
-	var perception_button := Button.new()
-	perception_button.name = "ShowPassivePerceptionButton"
-	perception_button.text = "Show Passive Perception"
-	perception_button.custom_minimum_size = Vector2(270, 40)
-	perception_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	perception_button.pressed.connect(_show_passive_perception)
-	box.add_child(perception_button)
-
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No check rolled yet."
+	_check_result_text.text = "No action used yet."
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_check_result_text)
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2I: Prone condition toggle only. No condition effects/combat yet."
+	note.text = "Stage 2J: action economy tracker only. No combat/hotbar/enemies yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -152,22 +163,21 @@ func _build_overlay() -> void:
 	var close_button := Button.new()
 	close_button.name = "CloseCharacterSheetButton"
 	close_button.text = "Close"
-	close_button.custom_minimum_size = Vector2(220, 42)
+	close_button.custom_minimum_size = Vector2(220, 40)
 	close_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	close_button.pressed.connect(_hide_sheet)
 	box.add_child(close_button)
 
 func _get_sheet_text() -> String:
 	var proficiency_bonus := _dice_roller.get_proficiency_bonus(1)
-	return "%s\nLevel 1 Proficiency Bonus: +%d\n%s\n%s\n%s\n%s\n%s\n%s" % [
+	return "%s\nLevel 1 Proficiency Bonus: +%d\n%s\n%s\n%s\n%s\n%s" % [
 		_ability_scores.get_summary_text(),
 		proficiency_bonus,
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
-		_passive_scores.get_summary_text(_ability_scores.get_wisdom_modifier(), proficiency_bonus, false),
 		_saving_throws.get_summary_text(),
-		_condition_tracker.get_registry_summary_text(),
 		_condition_tracker.get_summary_text(),
+		_action_economy.get_summary_text(),
 	]
 
 func _toggle_sheet() -> void:
@@ -177,6 +187,19 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _use_action() -> void:
+	var used := _action_economy.use_action()
+	_sheet_text.text = _get_sheet_text()
+	if used:
+		_check_result_text.text = "Action used.\n" + _action_economy.get_summary_text()
+	else:
+		_check_result_text.text = "Action already used. Reset turn to recover it.\n" + _action_economy.get_summary_text()
+
+func _reset_turn() -> void:
+	_action_economy.reset_turn()
+	_sheet_text.text = _get_sheet_text()
+	_check_result_text.text = "Turn reset.\n" + _action_economy.get_summary_text()
 
 func _toggle_prone() -> void:
 	var active := _condition_tracker.toggle_prone()
@@ -200,13 +223,6 @@ func _roll_athletics_check() -> void:
 	var ability_name := _skill_registry.get_ability_for_skill(skill_name)
 	var result := _dice_roller.roll_ability_check(skill_name + " (" + ability_name + ")", _ability_scores.get_modifier_for_ability(ability_name), 1, true, 12)
 	_check_result_text.text = _dice_roller.format_check_result(result)
-
-func _show_passive_perception() -> void:
-	var proficiency_bonus := _dice_roller.get_proficiency_bonus(1)
-	_check_result_text.text = "Passive Perception = 10 + WIS %s + Prof +0 = %d" % [
-		_ability_scores.format_modifier(_ability_scores.get_wisdom_modifier()),
-		_passive_scores.get_passive_perception(_ability_scores.get_wisdom_modifier(), proficiency_bonus, false),
-	]
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
@@ -237,6 +253,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H"]:
-		updated = updated.replace(stage_name, "Stage 2I")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I"]:
+		updated = updated.replace(stage_name, "Stage 2J")
 	return updated
