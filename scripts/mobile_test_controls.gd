@@ -57,7 +57,7 @@ func _ready() -> void:
 		pause_menu_button.pressed.connect(_on_back_to_menu_pressed)
 
 	_set_paused(false)
-	_set_status("Stage 1F: test NPC interaction.")
+	_set_status("Stage 1F: test NPC is the big yellow block.")
 
 func _process(_delta: float) -> void:
 	if not _paused and player != null and player.has_method("set_move_input"):
@@ -84,41 +84,41 @@ func _ensure_test_npc_exists() -> void:
 	var world := get_parent() as Node3D
 	if world == null:
 		return
-	if world.get_node_or_null("TestNPC") != null:
-		return
+
+	var old_npc := world.get_node_or_null("TestNPC")
+	if old_npc != null:
+		old_npc.queue_free()
 
 	var npc := StaticBody3D.new()
 	npc.name = "TestNPC"
-	npc.position = Vector3(0, 0.95, -3.2)
+	npc.position = Vector3(-3.0, 1.0, 0.0)
 	npc.add_to_group("test_interactable")
 	npc.set_script(TEST_NPC_SCRIPT)
-	npc.npc_name = "Test NPC"
-	npc.interaction_line = "The road ahead is not ready yet."
+	npc.set("npc_name", "Test NPC")
+	npc.set("interaction_line", "The road ahead is not ready yet.")
 	world.add_child(npc)
 
 	var mesh_instance := MeshInstance3D.new()
 	mesh_instance.name = "TestNPCMesh"
-	var mesh := CapsuleMesh.new()
-	mesh.radius = 0.45
-	mesh.height = 1.8
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(1.4, 2.0, 1.4)
 	mesh_instance.mesh = mesh
 	var material := StandardMaterial3D.new()
-	material.albedo_color = Color(0.9, 0.75, 0.18, 1)
+	material.albedo_color = Color(1.0, 0.85, 0.05, 1)
 	mesh_instance.material_override = material
 	npc.add_child(mesh_instance)
 
 	var collision := CollisionShape3D.new()
 	collision.name = "TestNPCCollision"
-	var shape := CapsuleShape3D.new()
-	shape.radius = 0.45
-	shape.height = 1.8
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(1.4, 2.0, 1.4)
 	collision.shape = shape
 	npc.add_child(collision)
 
 	var label := Label3D.new()
 	label.name = "TestNPCLabel"
-	label.text = "Test NPC"
-	label.position = Vector3(0, 1.3, 0)
+	label.text = "BIG YELLOW NPC"
+	label.position = Vector3(0, 1.35, 0)
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	npc.add_child(label)
 
