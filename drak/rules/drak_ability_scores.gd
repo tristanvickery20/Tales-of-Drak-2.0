@@ -29,6 +29,23 @@ func get_wisdom_modifier() -> int:
 func get_charisma_modifier() -> int:
 	return get_modifier(charisma)
 
+func get_modifier_for_ability(ability_name: String) -> int:
+	match ability_name:
+		"Strength":
+			return get_strength_modifier()
+		"Dexterity":
+			return get_dexterity_modifier()
+		"Constitution":
+			return get_constitution_modifier()
+		"Intelligence":
+			return get_intelligence_modifier()
+		"Wisdom":
+			return get_wisdom_modifier()
+		"Charisma":
+			return get_charisma_modifier()
+		_:
+			return 0
+
 func format_modifier(modifier: int) -> String:
 	if modifier >= 0:
 		return "+%d" % modifier
