@@ -2,9 +2,51 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2R — Stage 2 Final Lock + Stage 3 Handoff
+## Stage 3A — Character Identity Shell
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `STAGE3_DELIVERABLE.md`.
+- Added `drak/character/drak_character_identity.gd`.
+- Added a tiny character identity shell with:
+  - character name placeholder
+  - selected race/species placeholder
+  - selected class placeholder
+  - current level placeholder
+- Added `Preview Character Identity` button to the mobile Character Sheet.
+- Added character identity summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 3A`.
+
+### Current Placeholder Rules
+- Current placeholder character is `Drak Test Hero`.
+- Current placeholder race/species is `Variant Human`.
+- Current placeholder class is `Fighter`.
+- Current placeholder level is `1`.
+- No race/species traits are active yet.
+- No class features are active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation, closeout checklist, Stage 3 handoff, rules manifest, and changelog.
+
+### Not Added Yet
+- No race/species traits.
+- No class features.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2R — Stage 2 Final Lock + Stage 3 Handoff
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `STAGE3_HANDOFF.md`.
