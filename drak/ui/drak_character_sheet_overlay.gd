@@ -16,8 +16,8 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3C"
-const CURRENT_STAGE_STATUS := "Stage 3C: approved class registry."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 3D"
+const CURRENT_STAGE_STATUS := "Stage 3D: Fighter level 1 shell."
 const CURRENT_LEVEL := 1
 
 const CHARACTER_NAME := "Drak Test Hero"
@@ -25,6 +25,7 @@ const RACE_SPECIES_NAME := "Variant Human"
 const CLASS_NAME := "Fighter"
 const APPROVED_RACE_SPECIES_TEXT := "Approved Race/Species: 4\nElf, Variant Human, Dwarf, Orc"
 const APPROVED_CLASSES_TEXT := "Approved Classes: 7\nFighter, Wizard, Cleric, Warlock, Rogue, Barbarian, Ranger"
+const FIGHTER_LEVEL_ONE_TEXT := "Fighter Level 1 Shell\nHit Die: d10\nSaves: STR, CON\nFeatures: not active yet"
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
@@ -104,7 +105,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 3C Character Sheet"
+	title.text = "Stage 3D Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -115,6 +116,14 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var fighter_shell_button := Button.new()
+	fighter_shell_button.name = "PreviewFighterLevelOneShellButton"
+	fighter_shell_button.text = "Preview Fighter Level 1"
+	fighter_shell_button.custom_minimum_size = Vector2(270, 34)
+	fighter_shell_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	fighter_shell_button.pressed.connect(_preview_fighter_level_one_shell)
+	box.add_child(fighter_shell_button)
 
 	var class_registry_button := Button.new()
 	class_registry_button.name = "PreviewClassRegistryButton"
@@ -166,7 +175,7 @@ func _build_overlay() -> void:
 
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No class preview yet."
+	_check_result_text.text = "No Fighter preview yet."
 	_check_result_text.custom_minimum_size = Vector2(270, 46)
 	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -177,7 +186,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 3C registry only. No class features/spells yet."
+	note.text = "Stage 3D Fighter shell only. No active features/combat yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -196,8 +205,8 @@ func _get_sheet_text() -> String:
 		_get_character_identity_summary(),
 		APPROVED_RACE_SPECIES_TEXT,
 		APPROVED_CLASSES_TEXT,
+		FIGHTER_LEVEL_ONE_TEXT,
 		_ability_scores.get_summary_text(),
-		_level_progression.get_summary_text(CURRENT_LEVEL),
 		_rules_manifest.get_summary_text(),
 	]
 
@@ -216,6 +225,9 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _preview_fighter_level_one_shell() -> void:
+	_check_result_text.text = "Fighter 1 shell: d10, STR/CON saves as labels only. No features/combat."
 
 func _preview_class_registry() -> void:
 	_check_result_text.text = "Approved: Fighter, Wizard, Cleric, Warlock, Rogue, Barbarian, Ranger. No features yet."
@@ -271,6 +283,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B"]:
-		updated = updated.replace(stage_name, "Stage 3C")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C"]:
+		updated = updated.replace(stage_name, "Stage 3D")
 	return updated
