@@ -16,8 +16,8 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2Q"
-const CURRENT_STAGE_STATUS := "Stage 2Q: mobile Sheet cleanup and closeout checklist."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2R"
+const CURRENT_STAGE_STATUS := "Stage 2R: Stage 2 final lock and Stage 3 handoff."
 const CURRENT_LEVEL := 1
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
@@ -98,7 +98,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2Q Character Sheet"
+	title.text = "Stage 2R Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -109,6 +109,14 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var handoff_button := Button.new()
+	handoff_button.name = "PreviewStage3HandoffButton"
+	handoff_button.text = "Preview Stage 3 Handoff"
+	handoff_button.custom_minimum_size = Vector2(270, 34)
+	handoff_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	handoff_button.pressed.connect(_preview_stage3_handoff)
+	box.add_child(handoff_button)
 
 	var closeout_button := Button.new()
 	closeout_button.name = "PreviewStage2CloseoutButton"
@@ -125,14 +133,6 @@ func _build_overlay() -> void:
 	rules_audit_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	rules_audit_button.pressed.connect(_preview_rules_audit)
 	box.add_child(rules_audit_button)
-
-	var preview_spellcasting_button := Button.new()
-	preview_spellcasting_button.name = "PreviewSpellcastingButton"
-	preview_spellcasting_button.text = "Preview Spellcasting"
-	preview_spellcasting_button.custom_minimum_size = Vector2(270, 34)
-	preview_spellcasting_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	preview_spellcasting_button.pressed.connect(_preview_spellcasting)
-	box.add_child(preview_spellcasting_button)
 
 	var preview_level_button := Button.new()
 	preview_level_button.name = "PreviewLevelFiveButton"
@@ -160,7 +160,7 @@ func _build_overlay() -> void:
 
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No closeout preview yet."
+	_check_result_text.text = "No handoff preview yet."
 	_check_result_text.custom_minimum_size = Vector2(270, 46)
 	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -171,7 +171,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2Q cleanup only. Stage 3 begins race/class foundation later."
+	note.text = "Stage 2R final lock. Stage 3 starts identity only next."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -204,14 +204,14 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
+func _preview_stage3_handoff() -> void:
+	_check_result_text.text = "Stage 3 handoff: add character identity shell first. No traits/features/combat yet."
+
 func _preview_stage2_closeout() -> void:
-	_check_result_text.text = "Stage 2 closeout: iPhone loop, rules summary, changelog, and no unrelated rewrites."
+	_check_result_text.text = "Stage 2 locked: rules foundation stable, iPhone loop preserved."
 
 func _preview_rules_audit() -> void:
 	_check_result_text.text = _rules_manifest.get_audit_text()
-
-func _preview_spellcasting() -> void:
-	_check_result_text.text = "Spellcasting shell ready. No spells or spell slots active yet."
 
 func _preview_level_five() -> void:
 	_check_result_text.text = "Level 5 preview: Proficiency Bonus +3. No class/race features yet."
@@ -258,6 +258,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P"]:
-		updated = updated.replace(stage_name, "Stage 2Q")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q"]:
+		updated = updated.replace(stage_name, "Stage 2R")
 	return updated
