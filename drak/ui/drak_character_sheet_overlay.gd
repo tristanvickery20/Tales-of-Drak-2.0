@@ -6,9 +6,10 @@ const SKILL_REGISTRY_SCRIPT := preload("res://drak/rules/drak_skill_registry.gd"
 const PASSIVE_SCORES_SCRIPT := preload("res://drak/rules/drak_passive_scores.gd")
 const HIT_POINTS_SCRIPT := preload("res://drak/rules/drak_hit_points.gd")
 const ARMOR_CLASS_SCRIPT := preload("res://drak/rules/drak_armor_class.gd")
+const SAVING_THROWS_SCRIPT := preload("res://drak/rules/drak_saving_throws.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2G"
-const CURRENT_STAGE_STATUS := "Stage 2G: HP and Armor Class foundation."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2H"
+const CURRENT_STAGE_STATUS := "Stage 2H: saving throw foundation."
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
@@ -16,6 +17,7 @@ var _skill_registry: DrakSkillRegistry = SKILL_REGISTRY_SCRIPT.new()
 var _passive_scores: DrakPassiveScores = PASSIVE_SCORES_SCRIPT.new()
 var _hit_points: DrakHitPoints = HIT_POINTS_SCRIPT.new()
 var _armor_class: DrakArmorClass = ARMOR_CLASS_SCRIPT.new()
+var _saving_throws: DrakSavingThrows = SAVING_THROWS_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -78,7 +80,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2G Character Sheet"
+	title.text = "Stage 2H Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -89,6 +91,14 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var save_button := Button.new()
+	save_button.name = "RollDexteritySaveButton"
+	save_button.text = "DEX Save DC 13"
+	save_button.custom_minimum_size = Vector2(270, 40)
+	save_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	save_button.pressed.connect(_roll_dexterity_save)
+	box.add_child(save_button)
 
 	var hp_ac_button := Button.new()
 	hp_ac_button.name = "ShowHpAcButton"
@@ -105,14 +115,6 @@ func _build_overlay() -> void:
 	advantage_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	advantage_button.pressed.connect(_roll_advantage_strength_check)
 	box.add_child(advantage_button)
-
-	var disadvantage_button := Button.new()
-	disadvantage_button.name = "RollDisadvantageStrengthCheckButton"
-	disadvantage_button.text = "Disadvantage STR DC 12"
-	disadvantage_button.custom_minimum_size = Vector2(270, 40)
-	disadvantage_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	disadvantage_button.pressed.connect(_roll_disadvantage_strength_check)
-	box.add_child(disadvantage_button)
 
 	var athletics_button := Button.new()
 	athletics_button.name = "RollAthleticsCheckButton"
@@ -139,7 +141,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2G: HP and AC display only. No damage/combat/classes/races yet."
+	note.text = "Stage 2H: saving throw display/test only. No damage/combat/classes/races yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -155,12 +157,13 @@ func _build_overlay() -> void:
 
 func _get_sheet_text() -> String:
 	var proficiency_bonus := _dice_roller.get_proficiency_bonus(1)
-	return "%s\nLevel 1 Proficiency Bonus: +%d\n%s\n%s\n%s" % [
+	return "%s\nLevel 1 Proficiency Bonus: +%d\n%s\n%s\n%s\n%s" % [
 		_ability_scores.get_summary_text(),
 		proficiency_bonus,
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
 		_passive_scores.get_summary_text(_ability_scores.get_wisdom_modifier(), proficiency_bonus, false),
+		_saving_throws.get_summary_text(),
 	]
 
 func _toggle_sheet() -> void:
@@ -171,6 +174,11 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
+func _roll_dexterity_save() -> void:
+	var save_name := _saving_throws.format_save_name("Dexterity")
+	var result := _dice_roller.roll_ability_check(save_name, _ability_scores.get_dexterity_modifier(), 1, false, 13)
+	_check_result_text.text = _dice_roller.format_check_result(result)
+
 func _show_hp_ac() -> void:
 	_check_result_text.text = "%s\n%s" % [
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
@@ -179,10 +187,6 @@ func _show_hp_ac() -> void:
 
 func _roll_advantage_strength_check() -> void:
 	var result := _dice_roller.roll_ability_check("Strength", _ability_scores.get_strength_modifier(), 1, false, 12, DrakDiceRoller.ROLL_ADVANTAGE)
-	_check_result_text.text = _dice_roller.format_check_result(result)
-
-func _roll_disadvantage_strength_check() -> void:
-	var result := _dice_roller.roll_ability_check("Strength", _ability_scores.get_strength_modifier(), 1, false, 12, DrakDiceRoller.ROLL_DISADVANTAGE)
 	_check_result_text.text = _dice_roller.format_check_result(result)
 
 func _roll_athletics_check() -> void:
@@ -227,6 +231,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F"]:
-		updated = updated.replace(stage_name, "Stage 2G")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G"]:
+		updated = updated.replace(stage_name, "Stage 2H")
 	return updated
