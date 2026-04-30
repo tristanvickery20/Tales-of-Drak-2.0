@@ -10,9 +10,10 @@ const SAVING_THROWS_SCRIPT := preload("res://drak/rules/drak_saving_throws.gd")
 const CONDITION_TRACKER_SCRIPT := preload("res://drak/rules/drak_condition_tracker.gd")
 const ACTION_ECONOMY_SCRIPT := preload("res://drak/rules/drak_action_economy.gd")
 const COOLDOWN_TRACKER_SCRIPT := preload("res://drak/rules/drak_cooldown_tracker.gd")
+const DAMAGE_TYPES_SCRIPT := preload("res://drak/rules/drak_damage_types.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2K"
-const CURRENT_STAGE_STATUS := "Stage 2K: cooldown tracker foundation."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2L"
+const CURRENT_STAGE_STATUS := "Stage 2L: damage types foundation."
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
@@ -24,6 +25,7 @@ var _saving_throws: DrakSavingThrows = SAVING_THROWS_SCRIPT.new()
 var _condition_tracker: DrakConditionTracker = CONDITION_TRACKER_SCRIPT.new()
 var _action_economy: DrakActionEconomy = ACTION_ECONOMY_SCRIPT.new()
 var _cooldown_tracker: DrakCooldownTracker = COOLDOWN_TRACKER_SCRIPT.new()
+var _damage_types: DrakDamageTypes = DAMAGE_TYPES_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -87,7 +89,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2K Character Sheet"
+	title.text = "Stage 2L Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -99,10 +101,18 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
+	var preview_fire_button := Button.new()
+	preview_fire_button.name = "PreviewFireDamageButton"
+	preview_fire_button.text = "Preview Fire Damage"
+	preview_fire_button.custom_minimum_size = Vector2(270, 34)
+	preview_fire_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	preview_fire_button.pressed.connect(_preview_fire_damage)
+	box.add_child(preview_fire_button)
+
 	var start_cooldown_button := Button.new()
 	start_cooldown_button.name = "StartCooldownButton"
 	start_cooldown_button.text = "Start 5s Cooldown"
-	start_cooldown_button.custom_minimum_size = Vector2(270, 36)
+	start_cooldown_button.custom_minimum_size = Vector2(270, 34)
 	start_cooldown_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	start_cooldown_button.pressed.connect(_start_test_cooldown)
 	box.add_child(start_cooldown_button)
@@ -110,7 +120,7 @@ func _build_overlay() -> void:
 	var tick_cooldown_button := Button.new()
 	tick_cooldown_button.name = "TickCooldownButton"
 	tick_cooldown_button.text = "Tick Cooldown -1s"
-	tick_cooldown_button.custom_minimum_size = Vector2(270, 36)
+	tick_cooldown_button.custom_minimum_size = Vector2(270, 34)
 	tick_cooldown_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	tick_cooldown_button.pressed.connect(_tick_test_cooldown)
 	box.add_child(tick_cooldown_button)
@@ -118,7 +128,7 @@ func _build_overlay() -> void:
 	var use_action_button := Button.new()
 	use_action_button.name = "UseActionButton"
 	use_action_button.text = "Use Action"
-	use_action_button.custom_minimum_size = Vector2(270, 36)
+	use_action_button.custom_minimum_size = Vector2(270, 34)
 	use_action_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	use_action_button.pressed.connect(_use_action)
 	box.add_child(use_action_button)
@@ -126,7 +136,7 @@ func _build_overlay() -> void:
 	var reset_turn_button := Button.new()
 	reset_turn_button.name = "ResetTurnButton"
 	reset_turn_button.text = "Reset Turn"
-	reset_turn_button.custom_minimum_size = Vector2(270, 36)
+	reset_turn_button.custom_minimum_size = Vector2(270, 34)
 	reset_turn_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	reset_turn_button.pressed.connect(_reset_turn)
 	box.add_child(reset_turn_button)
@@ -134,29 +144,21 @@ func _build_overlay() -> void:
 	var prone_button := Button.new()
 	prone_button.name = "ToggleProneButton"
 	prone_button.text = "Toggle Prone"
-	prone_button.custom_minimum_size = Vector2(270, 36)
+	prone_button.custom_minimum_size = Vector2(270, 34)
 	prone_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	prone_button.pressed.connect(_toggle_prone)
 	box.add_child(prone_button)
 
-	var save_button := Button.new()
-	save_button.name = "RollDexteritySaveButton"
-	save_button.text = "DEX Save DC 13"
-	save_button.custom_minimum_size = Vector2(270, 36)
-	save_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	save_button.pressed.connect(_roll_dexterity_save)
-	box.add_child(save_button)
-
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No cooldown started yet."
+	_check_result_text.text = "No damage preview yet."
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_check_result_text)
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2K: cooldown tracker only. Combat stays real-time/hotbar later, not turn-based."
+	note.text = "Stage 2L: damage type registry only. Preview does not reduce HP."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -177,9 +179,9 @@ func _get_sheet_text() -> String:
 		proficiency_bonus,
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
-		_condition_tracker.get_summary_text(),
 		_action_economy.get_summary_text(),
 		_cooldown_tracker.get_summary_text(),
+		_damage_types.get_summary_text(),
 	]
 
 func _toggle_sheet() -> void:
@@ -189,6 +191,9 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _preview_fire_damage() -> void:
+	_check_result_text.text = _damage_types.preview_damage("Fire", 4)
 
 func _start_test_cooldown() -> void:
 	_cooldown_tracker.start_cooldown(DrakCooldownTracker.TEST_ABILITY_ID, 5.0)
@@ -219,11 +224,6 @@ func _toggle_prone() -> void:
 	_sheet_text.text = _get_sheet_text()
 	_check_result_text.text = "Prone toggled " + state_text + "\n" + _condition_tracker.get_summary_text()
 
-func _roll_dexterity_save() -> void:
-	var save_name := _saving_throws.format_save_name("Dexterity")
-	var result := _dice_roller.roll_ability_check(save_name, _ability_scores.get_dexterity_modifier(), 1, false, 13)
-	_check_result_text.text = _dice_roller.format_check_result(result)
-
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
 	var in_playable_scene := scene != null and scene.get_node_or_null("PlaceholderPlayer") != null
@@ -253,6 +253,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J"]:
-		updated = updated.replace(stage_name, "Stage 2K")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K"]:
+		updated = updated.replace(stage_name, "Stage 2L")
 	return updated
