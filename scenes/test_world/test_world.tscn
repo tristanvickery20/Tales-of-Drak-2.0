@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://tod_test_world"]
+[gd_scene load_steps=18 format=3 uid="uid://tod_test_world"]
 
 [ext_resource type="Script" path="res://scripts/mobile_test_player.gd" id="1_mobile_player"]
 [ext_resource type="Script" path="res://scripts/mobile_test_controls.gd" id="2_mobile_controls"]
 [ext_resource type="Script" path="res://scripts/follow_camera.gd" id="3_follow_camera"]
 [ext_resource type="Script" path="res://scripts/test_interactable.gd" id="4_test_interactable"]
+[ext_resource type="Script" path="res://scripts/test_resource_pickup.gd" id="5_resource_pickup"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 size = Vector3(24, 0.2, 24)
@@ -27,6 +28,18 @@ size = Vector3(1, 1, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_interactable"]
 albedo_color = Color(0.2, 0.55, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pickup_big"]
+size = Vector3(1.25, 1.25, 1.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pickup_big"]
+size = Vector3(1.25, 1.25, 1.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wood"]
+albedo_color = Color(0.68, 0.38, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stone"]
+albedo_color = Color(0.1, 0.8, 1, 1)
 
 [node name="TestWorld" type="Node3D"]
 
@@ -67,6 +80,42 @@ shape = SubResource("BoxShape3D_interactable")
 [node name="InteractableLabel" type="Label3D" parent="TestInteractable"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 text = "Test Interactable"
+billboard = 1
+
+[node name="WoodPickup" type="StaticBody3D" parent="." groups=["test_interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0.65, 2.1)
+script = ExtResource("5_resource_pickup")
+resource_name = "Wood"
+amount = 1
+
+[node name="WoodPickupMesh" type="MeshInstance3D" parent="WoodPickup"]
+mesh = SubResource("BoxMesh_pickup_big")
+surface_material_override/0 = SubResource("StandardMaterial3D_wood")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WoodPickup"]
+shape = SubResource("BoxShape3D_pickup_big")
+
+[node name="WoodPickupLabel" type="Label3D" parent="WoodPickup"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+text = "PICKUP: Wood"
+billboard = 1
+
+[node name="StonePickup" type="StaticBody3D" parent="." groups=["test_interactable"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 0.65, 2.1)
+script = ExtResource("5_resource_pickup")
+resource_name = "Stone"
+amount = 1
+
+[node name="StonePickupMesh" type="MeshInstance3D" parent="StonePickup"]
+mesh = SubResource("BoxMesh_pickup_big")
+surface_material_override/0 = SubResource("StandardMaterial3D_stone")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StonePickup"]
+shape = SubResource("BoxShape3D_pickup_big")
+
+[node name="StonePickupLabel" type="Label3D" parent="StonePickup"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+text = "PICKUP: Stone"
 billboard = 1
 
 [node name="Camera3D" type="Camera3D" parent="."]
