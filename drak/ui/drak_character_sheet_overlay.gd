@@ -11,9 +11,10 @@ const CONDITION_TRACKER_SCRIPT := preload("res://drak/rules/drak_condition_track
 const ACTION_ECONOMY_SCRIPT := preload("res://drak/rules/drak_action_economy.gd")
 const COOLDOWN_TRACKER_SCRIPT := preload("res://drak/rules/drak_cooldown_tracker.gd")
 const DAMAGE_TYPES_SCRIPT := preload("res://drak/rules/drak_damage_types.gd")
+const REST_TRACKER_SCRIPT := preload("res://drak/rules/drak_rest_tracker.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2L"
-const CURRENT_STAGE_STATUS := "Stage 2L: damage types foundation."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2M"
+const CURRENT_STAGE_STATUS := "Stage 2M: hit dice and rest foundation."
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
 var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
@@ -26,6 +27,7 @@ var _condition_tracker: DrakConditionTracker = CONDITION_TRACKER_SCRIPT.new()
 var _action_economy: DrakActionEconomy = ACTION_ECONOMY_SCRIPT.new()
 var _cooldown_tracker: DrakCooldownTracker = COOLDOWN_TRACKER_SCRIPT.new()
 var _damage_types: DrakDamageTypes = DAMAGE_TYPES_SCRIPT.new()
+var _rest_tracker: DrakRestTracker = REST_TRACKER_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -89,7 +91,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2L Character Sheet"
+	title.text = "Stage 2M Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -100,6 +102,22 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var spend_hit_die_button := Button.new()
+	spend_hit_die_button.name = "SpendHitDieButton"
+	spend_hit_die_button.text = "Spend Hit Die"
+	spend_hit_die_button.custom_minimum_size = Vector2(270, 34)
+	spend_hit_die_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	spend_hit_die_button.pressed.connect(_spend_hit_die)
+	box.add_child(spend_hit_die_button)
+
+	var long_rest_button := Button.new()
+	long_rest_button.name = "LongRestButton"
+	long_rest_button.text = "Long Rest"
+	long_rest_button.custom_minimum_size = Vector2(270, 34)
+	long_rest_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	long_rest_button.pressed.connect(_long_rest)
+	box.add_child(long_rest_button)
 
 	var preview_fire_button := Button.new()
 	preview_fire_button.name = "PreviewFireDamageButton"
@@ -133,32 +151,16 @@ func _build_overlay() -> void:
 	use_action_button.pressed.connect(_use_action)
 	box.add_child(use_action_button)
 
-	var reset_turn_button := Button.new()
-	reset_turn_button.name = "ResetTurnButton"
-	reset_turn_button.text = "Reset Turn"
-	reset_turn_button.custom_minimum_size = Vector2(270, 34)
-	reset_turn_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	reset_turn_button.pressed.connect(_reset_turn)
-	box.add_child(reset_turn_button)
-
-	var prone_button := Button.new()
-	prone_button.name = "ToggleProneButton"
-	prone_button.text = "Toggle Prone"
-	prone_button.custom_minimum_size = Vector2(270, 34)
-	prone_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	prone_button.pressed.connect(_toggle_prone)
-	box.add_child(prone_button)
-
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No damage preview yet."
+	_check_result_text.text = "No rest action yet."
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_check_result_text)
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2L: damage type registry only. Preview does not reduce HP."
+	note.text = "Stage 2M: hit dice/rest tracker only. Preview healing does not change HP."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -179,7 +181,7 @@ func _get_sheet_text() -> String:
 		proficiency_bonus,
 		_hit_points.get_summary_text(_ability_scores.get_constitution_modifier()),
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
-		_action_economy.get_summary_text(),
+		_rest_tracker.get_summary_text(),
 		_cooldown_tracker.get_summary_text(),
 		_damage_types.get_summary_text(),
 	]
@@ -191,6 +193,16 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _spend_hit_die() -> void:
+	var result := _rest_tracker.spend_hit_die(_ability_scores.get_constitution_modifier())
+	_sheet_text.text = _get_sheet_text()
+	_check_result_text.text = _rest_tracker.format_spend_result(result)
+
+func _long_rest() -> void:
+	_rest_tracker.long_rest()
+	_sheet_text.text = _get_sheet_text()
+	_check_result_text.text = "Long Rest complete.\nHit dice restored.\nNo HP is changed in Stage 2M."
 
 func _preview_fire_damage() -> void:
 	_check_result_text.text = _damage_types.preview_damage("Fire", 4)
@@ -212,17 +224,6 @@ func _use_action() -> void:
 		_check_result_text.text = "Action used.\n" + _action_economy.get_summary_text()
 	else:
 		_check_result_text.text = "Action already used. Reset turn to recover it.\n" + _action_economy.get_summary_text()
-
-func _reset_turn() -> void:
-	_action_economy.reset_turn()
-	_sheet_text.text = _get_sheet_text()
-	_check_result_text.text = "Turn reset.\n" + _action_economy.get_summary_text()
-
-func _toggle_prone() -> void:
-	var active := _condition_tracker.toggle_prone()
-	var state_text := "ON" if active else "OFF"
-	_sheet_text.text = _get_sheet_text()
-	_check_result_text.text = "Prone toggled " + state_text + "\n" + _condition_tracker.get_summary_text()
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
@@ -253,6 +254,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K"]:
-		updated = updated.replace(stage_name, "Stage 2L")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L"]:
+		updated = updated.replace(stage_name, "Stage 2M")
 	return updated
