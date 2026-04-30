@@ -2,9 +2,56 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3D Fix — Mobile Sheet Layout Cleanup
+## Stage 3E — Spellcasting Class Identity Shells
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/character/classes/drak_spellcaster_identity_shells.gd`.
+- Added tiny identity shells for approved caster classes only:
+  - Wizard uses INT label
+  - Cleric uses WIS label
+  - Warlock uses CHA label
+- Added `Casters` button to the mobile Character Sheet.
+- Added caster shell summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 3E`.
+
+### Current Placeholder Rules
+- Caster shells are data-only labels for now.
+- Wizard, Cleric, and Warlock are not selectable yet.
+- No spells are active yet.
+- No spell slots are active yet.
+- No spell attacks, spell save DCs, prepared spell lists, cantrips, pact magic, domains, or arcane recovery are active yet.
+- No class features are active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3A character identity display.
+- Stage 3B approved race/species registry display.
+- Stage 3C approved class registry display.
+- Stage 3D Fighter level 1 shell display.
+- Cleaned mobile Sheet layout.
+
+### Not Added Yet
+- No spells.
+- No spell slots.
+- No class features.
+- No race/species traits.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3D Fix — Mobile Sheet Layout Cleanup
+
+Status: confirmed working on iPhone.
 
 ### Fixed
 - Cleaned up the Stage 3D mobile Character Sheet layout.
@@ -45,7 +92,7 @@ Status: added, awaiting iPhone test confirmation.
 
 ## Stage 3D — Fighter Level 1 Shell
 
-Status: added, awaiting iPhone test confirmation after layout cleanup.
+Status: confirmed working on iPhone after layout cleanup.
 
 ### Added
 - Added `drak/character/classes/drak_fighter_level_one_shell.gd`.
