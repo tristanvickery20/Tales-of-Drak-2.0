@@ -2,9 +2,51 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 2N — Level Progression Foundation
+## Stage 2O — Spellcasting Resource Shell
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/rules/drak_spellcasting.gd`.
+- Added a tiny spellcasting resource shell.
+- Added `Preview Spellcasting` button to the mobile Character Sheet.
+- Added spellcasting summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 2O`.
+
+### Current Placeholder Rules
+- Spellcasting is not enabled by default.
+- Spellcasting ability is `None`.
+- Cantrips known are `0`.
+- Level 1 spell slots are `0 / 0`.
+- This stage only proves the shell exists for later Wizard, Cleric, Warlock, Ranger, and other class-specific spell logic.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Ability scores, modifiers, level range 1-5, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, action economy tracker, cooldown tracker, damage type registry, and hit dice/rest tracker.
+
+### Not Added Yet
+- No actual spells.
+- No spell lists.
+- No spell attacks.
+- No spell save DC.
+- No spell slot spending.
+- No class or race/species features.
+- No XP system.
+- No hotbar UI.
+- No automatic real-time cooldown ticking.
+- No damage application system.
+- No combat.
+- No enemies.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 2N — Level Progression Foundation
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/rules/drak_level_progression.gd`.
@@ -280,7 +322,7 @@ Status: confirmed working on iPhone.
 - Drag movement.
 - Jump, Interact, Reset, Pause, Menu, Camera buttons.
 - Cave entrance and exit cave transitions.
-- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, Passive Perception, and advantage/disadvantage rolls.
+- Ability scores, modifiers, proficiency bonus, skill registry, Athletics test, and Passive Perception.
 
 ### Not Added Yet
 - No damage system.
