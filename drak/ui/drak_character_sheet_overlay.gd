@@ -14,9 +14,10 @@ const DAMAGE_TYPES_SCRIPT := preload("res://drak/rules/drak_damage_types.gd")
 const REST_TRACKER_SCRIPT := preload("res://drak/rules/drak_rest_tracker.gd")
 const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progression.gd")
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
+const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2O"
-const CURRENT_STAGE_STATUS := "Stage 2O: spellcasting resource shell."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 2P"
+const CURRENT_STAGE_STATUS := "Stage 2P: rules manifest and audit."
 const CURRENT_LEVEL := 1
 
 var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
@@ -33,6 +34,7 @@ var _damage_types: DrakDamageTypes = DAMAGE_TYPES_SCRIPT.new()
 var _rest_tracker: DrakRestTracker = REST_TRACKER_SCRIPT.new()
 var _level_progression: DrakLevelProgression = LEVEL_PROGRESSION_SCRIPT.new()
 var _spellcasting: DrakSpellcasting = SPELLCASTING_SCRIPT.new()
+var _rules_manifest: DrakRulesManifest = RULES_MANIFEST_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -96,7 +98,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 2O Character Sheet"
+	title.text = "Stage 2P Character Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -107,6 +109,14 @@ func _build_overlay() -> void:
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
+
+	var rules_audit_button := Button.new()
+	rules_audit_button.name = "PreviewRulesAuditButton"
+	rules_audit_button.text = "Preview Rules Audit"
+	rules_audit_button.custom_minimum_size = Vector2(270, 34)
+	rules_audit_button.mouse_filter = Control.MOUSE_FILTER_STOP
+	rules_audit_button.pressed.connect(_preview_rules_audit)
+	box.add_child(rules_audit_button)
 
 	var preview_spellcasting_button := Button.new()
 	preview_spellcasting_button.name = "PreviewSpellcastingButton"
@@ -140,14 +150,6 @@ func _build_overlay() -> void:
 	long_rest_button.pressed.connect(_long_rest)
 	box.add_child(long_rest_button)
 
-	var preview_fire_button := Button.new()
-	preview_fire_button.name = "PreviewFireDamageButton"
-	preview_fire_button.text = "Preview Fire Damage"
-	preview_fire_button.custom_minimum_size = Vector2(270, 34)
-	preview_fire_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	preview_fire_button.pressed.connect(_preview_fire_damage)
-	box.add_child(preview_fire_button)
-
 	var start_cooldown_button := Button.new()
 	start_cooldown_button.name = "StartCooldownButton"
 	start_cooldown_button.text = "Start 5s Cooldown"
@@ -158,7 +160,7 @@ func _build_overlay() -> void:
 
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "No preview yet."
+	_check_result_text.text = "No audit preview yet."
 	_check_result_text.custom_minimum_size = Vector2(270, 46)
 	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -169,7 +171,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Stage 2O shell only. No spells/class lists yet."
+	note.text = "Stage 2P audit only. No combat/classes/races yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -191,7 +193,7 @@ func _get_sheet_text() -> String:
 		_armor_class.get_summary_text(_ability_scores.get_dexterity_modifier()),
 		_rest_tracker.get_summary_text(),
 		_spellcasting.get_summary_text(),
-		_cooldown_tracker.get_summary_text(),
+		_rules_manifest.get_summary_text(),
 	]
 
 func _toggle_sheet() -> void:
@@ -201,6 +203,9 @@ func _toggle_sheet() -> void:
 
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
+
+func _preview_rules_audit() -> void:
+	_check_result_text.text = _rules_manifest.get_audit_text()
 
 func _preview_spellcasting() -> void:
 	_check_result_text.text = "Spellcasting shell ready. No spells or spell slots active yet."
@@ -220,9 +225,6 @@ func _long_rest() -> void:
 	_rest_tracker.long_rest()
 	_sheet_text.text = _get_sheet_text()
 	_check_result_text.text = "Long Rest: hit dice restored. HP unchanged."
-
-func _preview_fire_damage() -> void:
-	_check_result_text.text = "Preview: 4 Fire damage. HP unchanged."
 
 func _start_test_cooldown() -> void:
 	_cooldown_tracker.start_cooldown(DrakCooldownTracker.TEST_ABILITY_ID, 5.0)
@@ -258,6 +260,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N"]:
-		updated = updated.replace(stage_name, "Stage 2O")
+	for stage_name in ["Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 1I", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O"]:
+		updated = updated.replace(stage_name, "Stage 2P")
 	return updated
