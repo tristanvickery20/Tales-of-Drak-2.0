@@ -2,9 +2,50 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3D — Fighter Level 1 Shell
+## Stage 3D Fix — Mobile Sheet Layout Cleanup
 
 Status: added, awaiting iPhone test confirmation.
+
+### Fixed
+- Cleaned up the Stage 3D mobile Character Sheet layout.
+- Shortened the main Sheet summary so it fits better on iPhone.
+- Shortened button labels:
+  - `Fighter 1`
+  - `Classes`
+  - `Races`
+  - `Identity`
+  - `Rules Audit`
+- Removed lower-priority test buttons from the visible Sheet to reduce clutter.
+- Kept Stage 3D as the active stage.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Character identity summary.
+- Race/species registry summary.
+- Class registry summary.
+- Fighter level 1 shell summary.
+- Stage 2 rules foundation summary.
+
+### Not Added Yet
+- No active Fighter features.
+- No Second Wind.
+- No Fighting Style.
+- No class feature mechanics.
+- No race/species traits.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3D — Fighter Level 1 Shell
+
+Status: added, awaiting iPhone test confirmation after layout cleanup.
 
 ### Added
 - Added `drak/character/classes/drak_fighter_level_one_shell.gd`.
