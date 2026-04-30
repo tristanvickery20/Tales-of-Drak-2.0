@@ -2,9 +2,55 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3C — Approved Class Registry
+## Stage 3D — Fighter Level 1 Shell
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/character/classes/drak_fighter_level_one_shell.gd`.
+- Added a tiny Fighter level 1 shell with placeholder labels for:
+  - class ID: `fighter`
+  - class name: `Fighter`
+  - level: `1`
+  - hit die: `d10`
+  - saving throw proficiencies: STR, CON
+- Added `Preview Fighter Level 1` button to the mobile Character Sheet.
+- Added Fighter level 1 shell summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 3D`.
+
+### Current Placeholder Rules
+- Fighter level 1 shell is data-only for now.
+- Hit die and saving throw proficiencies are labels only.
+- No Fighter class features are active yet.
+- No Fighting Style is active yet.
+- No Second Wind is active yet.
+- No weapons, armor, equipment, attacks, hotbar abilities, or combat behavior are active yet.
+- No HP calculation has been changed by this shell yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3A character identity display.
+- Stage 3B approved race/species registry display.
+- Stage 3C approved class registry display.
+
+### Not Added Yet
+- No class features.
+- No race/species traits.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3C — Approved Class Registry
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/character/drak_class_registry.gd`.
