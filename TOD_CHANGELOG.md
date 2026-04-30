@@ -2,9 +2,51 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3A Fix — Sheet Overlay Preload Safety
+## Stage 3B — Approved Race/Species Registry
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `drak/character/drak_race_species_registry.gd`.
+- Added approved race/species registry with only:
+  - Elf
+  - Variant Human
+  - Dwarf
+  - Orc
+- Added `Preview Race/Species Registry` button to the mobile Character Sheet.
+- Added approved race/species summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 3B`.
+
+### Current Placeholder Rules
+- Race/species registry is data-only for now.
+- Current character still displays `Variant Human` as a label only.
+- No race/species traits are active yet.
+- No ability score changes are active yet.
+- No movement, spell, proficiency, ancestry, or feature changes are active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3A character identity display.
+
+### Not Added Yet
+- No race/species traits.
+- No class registry yet.
+- No class features.
+- No XP system.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory, crafting, taming, quests, or dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3A Fix — Sheet Overlay Preload Safety
+
+Status: confirmed working on iPhone.
 
 ### Fixed
 - Removed the risky direct preload dependency from the mobile Sheet overlay for the new character identity shell.
@@ -33,7 +75,7 @@ Status: added, awaiting iPhone test confirmation.
 
 ## Stage 3A — Character Identity Shell
 
-Status: needs retest after overlay fix.
+Status: confirmed working on iPhone after overlay fix.
 
 ### Added
 - Added `STAGE3_DELIVERABLE.md`.
@@ -139,83 +181,6 @@ Status: confirmed working on iPhone.
 - No hotbar UI.
 - No automatic real-time cooldown ticking.
 - No damage application system.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 2P — Rules Manifest + Audit Foundation
-
-Status: confirmed working on iPhone.
-
-### Added
-- Added `drak/rules/drak_rules_manifest.gd`.
-- Added a Stage 2 rules manifest listing the foundations currently loaded.
-- Added `Preview Rules Audit` button to the mobile Character Sheet.
-- Added rules manifest summary display to the Sheet.
-- Updated visible HUD stage labels to `Tales of Drak — Stage 2P`.
-
-### Current Placeholder Rules
-- Rules manifest is an organization/audit layer only.
-- It does not change gameplay.
-- It confirms the current Stage 2 foundation modules exist before moving into later systems.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Ability scores, modifiers, level range 1-5, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, action economy tracker, cooldown tracker, damage type registry, hit dice/rest tracker, and spellcasting shell.
-
-### Not Added Yet
-- No combat.
-- No enemies.
-- No class or race/species features.
-- No XP system.
-- No hotbar UI.
-- No automatic real-time cooldown ticking.
-- No damage application system.
-- No inventory, crafting, taming, quests, or dialogue.
-- No Skelerealms integration yet.
-
-## Stage 2O — Spellcasting Resource Shell
-
-Status: confirmed working on iPhone.
-
-### Added
-- Added `drak/rules/drak_spellcasting.gd`.
-- Added a tiny spellcasting resource shell.
-- Added `Preview Spellcasting` button to the mobile Character Sheet.
-- Added spellcasting summary display to the Sheet.
-- Updated visible HUD stage labels to `Tales of Drak — Stage 2O`.
-
-### Current Placeholder Rules
-- Spellcasting is not enabled by default.
-- Spellcasting ability is `None`.
-- Cantrips known are `0`.
-- Level 1 spell slots are `0 / 0`.
-- This stage only proves the shell exists for later Wizard, Cleric, Warlock, Ranger, and other class-specific spell logic.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Drag movement.
-- Jump, Interact, Reset, Pause, Menu, Camera buttons.
-- Cave entrance and exit cave transitions.
-- Ability scores, modifiers, level range 1-5, proficiency bonus, skill registry, Athletics test, Passive Perception, advantage/disadvantage rolls, HP, AC, Dexterity saving throw test, Prone condition toggle, action economy tracker, cooldown tracker, damage type registry, and hit dice/rest tracker.
-
-### Not Added Yet
-- No actual spells.
-- No spell lists.
-- No spell attacks.
-- No spell save DC.
-- No spell slot spending.
-- No class or race/species features.
-- No XP system.
-- No hotbar UI.
-- No automatic real-time cooldown ticking.
-- No damage application system.
-- No combat.
-- No enemies.
 - No inventory, crafting, taming, quests, or dialogue.
 - No Skelerealms integration yet.
 
