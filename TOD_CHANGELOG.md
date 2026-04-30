@@ -2,9 +2,64 @@
 
 This file tracks the small verified stages added to the Godot/iPhone test build.
 
-## Stage 3F — Rogue / Barbarian / Ranger Identity Shells
+## Stage 3G — Character Foundation Audit + Closeout Checklist
 
 Status: added, awaiting iPhone test confirmation.
+
+### Added
+- Added `STAGE3_CLOSEOUT_CHECKLIST.md`.
+- Added `drak/character/drak_character_foundation_manifest.gd`.
+- Added Stage 3 character foundation manifest listing:
+  - Character Identity Shell
+  - Approved Race/Species Registry
+  - Approved Class Registry
+  - Fighter Level 1 Shell
+  - Wizard/Cleric/Warlock Caster Shells
+  - Rogue/Barbarian/Ranger Shells
+- Added `Stage 3 Audit` button to the mobile Character Sheet.
+- Added Stage 3 audit summary display to the Sheet.
+- Updated visible HUD stage labels to `Tales of Drak — Stage 3G`.
+
+### Current Placeholder Rules
+- This stage is an audit/closeout foundation only.
+- No race/species traits are active yet.
+- No class features are active yet.
+- No combat, hotbar, inventory, crafting, taming, quests, dialogue, or Skelerealms integration is active yet.
+
+### Preserved
+- iPhone Safari/GitHub Pages test loop.
+- Main menu and Start Game flow.
+- Drag movement.
+- Jump, Interact, Reset, Pause, Menu, Camera buttons.
+- Cave entrance and exit cave transitions.
+- Stage 2 rules foundation.
+- Stage 3A character identity display.
+- Stage 3B approved race/species registry display.
+- Stage 3C approved class registry display.
+- Stage 3D Fighter level 1 shell display.
+- Stage 3E caster shell display.
+- Stage 3F Rogue/Barbarian/Ranger shell display.
+- Cleaned mobile Sheet layout.
+
+### Not Added Yet
+- No active race/species traits.
+- No active class features.
+- No XP system.
+- No full character creator UI.
+- No face/body sliders.
+- No combat.
+- No enemies.
+- No hotbar UI.
+- No inventory/equipment.
+- No crafting.
+- No taming.
+- No quests.
+- No dialogue.
+- No Skelerealms integration yet.
+
+## Stage 3F — Rogue / Barbarian / Ranger Identity Shells
+
+Status: confirmed working on iPhone.
 
 ### Added
 - Added `drak/character/classes/drak_other_class_identity_shells.gd`.
