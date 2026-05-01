@@ -1,117 +1,87 @@
 extends CanvasLayer
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4C"
-const CURRENT_STAGE_STATUS := "Stage 4C: direct hotbar drawn from Sheet overlay."
-const CHARACTER_NAME := "Drak Test Hero"
-const RACE_SPECIES_NAME := "Variant Human"
-const CLASS_NAME := "Fighter"
-const CURRENT_LEVEL := 1
-
-const HOTBAR_TOP := ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="]
-const HOTBAR_BOTTOM := ["Q", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "-"]
-const HOTBAR_ABILITIES := ["Weapon", "Class", "Range", "Guard", "Heal", "Control", "Tame", "Dodge"]
+## Stage 4C safe overlay test.
+## This is intentionally small and non-invasive.
+## It does not touch movement, pickups, cave transitions, Skelerealms, combat math, or gameplay state.
 
 var _root: Control
+var _hotbar: Panel
 var _sheet_button: Button
 var _sheet_panel: Panel
-var _sheet_text: Label
-var _check_result_text: Label
-var _hotbar_panel: Panel
-var _last_scene: Node
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	layer = 90
-	_build_overlay()
-	_update_visibility()
+	layer = 80
+	_build_ui()
+	_update_visible()
 
 func _process(_delta: float) -> void:
-	if get_tree().current_scene != _last_scene:
-		_last_scene = get_tree().current_scene
-		_update_visibility()
-	_update_stage_hud_labels()
+	_update_visible()
+	_update_stage_labels()
 
-func _build_overlay() -> void:
+func _build_ui() -> void:
 	_root = Control.new()
-	_root.name = "DrakCharacterSheetOverlayRoot"
+	_root.name = "Stage4CSafeOverlayRoot"
 	_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_root)
+	_build_hotbar()
+	_build_sheet_button()
 
-	_build_direct_hotbar()
-	_build_sheet()
-
-func _build_direct_hotbar() -> void:
-	_hotbar_panel = Panel.new()
-	_hotbar_panel.name = "Stage4CDirectVisibleHotbar"
-	_hotbar_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_hotbar_panel.offset_left = 74.0
-	_hotbar_panel.offset_top = -170.0
-	_hotbar_panel.offset_right = -74.0
-	_hotbar_panel.offset_bottom = -36.0
-	_hotbar_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_root.add_child(_hotbar_panel)
+func _build_hotbar() -> void:
+	_hotbar = Panel.new()
+	_hotbar.name = "Stage4CSafeHotbar"
+	_hotbar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_hotbar.offset_left = 230.0
+	_hotbar.offset_top = -214.0
+	_hotbar.offset_right = -220.0
+	_hotbar.offset_bottom = -88.0
+	_hotbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_hotbar)
 
 	var box := VBoxContainer.new()
-	box.name = "HotbarBox"
 	box.set_anchors_preset(Control.PRESET_FULL_RECT)
-	box.offset_left = 10.0
+	box.offset_left = 8.0
 	box.offset_top = 6.0
-	box.offset_right = -10.0
+	box.offset_right = -8.0
 	box.offset_bottom = -6.0
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hotbar_panel.add_child(box)
+	_hotbar.add_child(box)
 
-	var top_row := HBoxContainer.new()
-	top_row.name = "HotbarTopRow"
-	top_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(top_row)
+	var top := HBoxContainer.new()
+	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(top)
 
-	var bottom_row := HBoxContainer.new()
-	bottom_row.name = "HotbarBottomRow"
-	bottom_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(bottom_row)
+	var bottom := HBoxContainer.new()
+	bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(bottom)
 
-	var strip_row := HBoxContainer.new()
-	strip_row.name = "HotbarActionStrip"
-	strip_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(strip_row)
+	var strip := HBoxContainer.new()
+	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(strip)
 
-	for i in range(HOTBAR_TOP.size()):
-		var ability := HOTBAR_ABILITIES[i] if i < 4 else ""
-		top_row.add_child(_make_hotbar_slot(HOTBAR_TOP[i], ability))
+	var top_labels := ["1 Weapon", "2 Class", "3 Range", "4 Guard", "5", "6", "7", "8", "9", "0", "-", "="]
+	var bottom_labels := ["Q Heal", "E Control", "R Tame", "T Dodge", "Y", "U", "I", "O", "P", "[", "]", "-"]
+	for text in top_labels:
+		top.add_child(_slot(text))
+	for text in bottom_labels:
+		bottom.add_child(_slot(text))
+	for text in ["ACTION", "BONUS", "SWORD", "REACTION", "MOVE"]:
+		strip.add_child(_strip(text))
 
-	for i in range(HOTBAR_BOTTOM.size()):
-		var ability_index := i + 4
-		var ability := HOTBAR_ABILITIES[ability_index] if ability_index < HOTBAR_ABILITIES.size() else ""
-		bottom_row.add_child(_make_hotbar_slot(HOTBAR_BOTTOM[i], ability))
+func _slot(text: String) -> Button:
+	var button := Button.new()
+	button.text = text
+	button.custom_minimum_size = Vector2(68, 34)
+	button.focus_mode = Control.FOCUS_NONE
+	button.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	button.add_theme_font_size_override("font_size", 10)
+	return button
 
-	strip_row.add_child(_make_strip_label("ACTION\n◆ ◆ ◆ ◆"))
-	strip_row.add_child(_make_strip_label("BONUS\n◇ ◇ ◇ ◇"))
-	strip_row.add_child(_make_strip_label("⚔"))
-	strip_row.add_child(_make_strip_label("REACTION\n◆"))
-	strip_row.add_child(_make_strip_label("MOVE\n◆ ◆ ◆ ◆"))
-
-func _make_hotbar_slot(key_text: String, ability_text: String) -> Panel:
-	var panel := Panel.new()
-	panel.custom_minimum_size = Vector2(64, 38)
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-
-	var label := Label.new()
-	label.text = "%s\n%s" % [key_text, ability_text]
-	label.set_anchors_preset(Control.PRESET_FULL_RECT)
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_size_override("font_size", 10)
-	label.add_theme_color_override("font_color", Color(0.08, 0.07, 0.05, 1.0))
-	panel.add_child(label)
-	return panel
-
-func _make_strip_label(text: String) -> Label:
+func _strip(text: String) -> Label:
 	var label := Label.new()
 	label.text = text
-	label.custom_minimum_size = Vector2(126, 30)
+	label.custom_minimum_size = Vector2(120, 24)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -119,9 +89,9 @@ func _make_strip_label(text: String) -> Label:
 	label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.72, 1.0))
 	return label
 
-func _build_sheet() -> void:
+func _build_sheet_button() -> void:
 	_sheet_button = Button.new()
-	_sheet_button.name = "CharacterSheetButton"
+	_sheet_button.name = "Stage4CSheetButton"
 	_sheet_button.text = "Sheet"
 	_sheet_button.custom_minimum_size = Vector2(118, 48)
 	_sheet_button.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -129,95 +99,42 @@ func _build_sheet() -> void:
 	_sheet_button.offset_top = 14.0
 	_sheet_button.offset_right = -174.0
 	_sheet_button.offset_bottom = 62.0
-	_sheet_button.mouse_filter = Control.MOUSE_FILTER_STOP
 	_sheet_button.pressed.connect(_toggle_sheet)
 	_root.add_child(_sheet_button)
 
 	_sheet_panel = Panel.new()
-	_sheet_panel.name = "CharacterSheetPanel"
+	_sheet_panel.name = "Stage4CSheetPanel"
 	_sheet_panel.set_anchors_preset(Control.PRESET_CENTER)
-	_sheet_panel.offset_left = -180.0
-	_sheet_panel.offset_top = -210.0
-	_sheet_panel.offset_right = 180.0
-	_sheet_panel.offset_bottom = 210.0
+	_sheet_panel.offset_left = -170.0
+	_sheet_panel.offset_top = -110.0
+	_sheet_panel.offset_right = 170.0
+	_sheet_panel.offset_bottom = 110.0
 	_sheet_panel.visible = false
-	_sheet_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.add_child(_sheet_panel)
 
-	var box := VBoxContainer.new()
-	box.name = "CharacterSheetBox"
-	box.set_anchors_preset(Control.PRESET_FULL_RECT)
-	box.offset_left = 18.0
-	box.offset_top = 12.0
-	box.offset_right = -18.0
-	box.offset_bottom = -12.0
-	box.mouse_filter = Control.MOUSE_FILTER_PASS
-	_sheet_panel.add_child(box)
-
-	var title := Label.new()
-	title.text = "Stage 4C Sheet"
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(title)
-
-	_sheet_text = Label.new()
-	_sheet_text.text = _get_sheet_text()
-	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_sheet_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(_sheet_text)
-
-	_add_button(box, "Hotbar Direct", _preview_hotbar_frame)
-	_add_button(box, "Stage 4 Rules", _preview_stage4_rules)
-	_add_button(box, "Skelerealms Alignment", _preview_skelerealms_alignment)
-	_add_button(box, "Close", _hide_sheet, Vector2(220, 36))
-
-	_check_result_text = Label.new()
-	_check_result_text.text = "Stage 4C: direct hotbar is drawn from the Sheet overlay autoload."
-	_check_result_text.custom_minimum_size = Vector2(270, 92)
-	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_check_result_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(_check_result_text)
-
-func _add_button(parent: Control, text: String, callback: Callable, min_size := Vector2(270, 34)) -> void:
-	var button := Button.new()
-	button.text = text
-	button.custom_minimum_size = min_size
-	button.focus_mode = Control.FOCUS_NONE
-	button.mouse_filter = Control.MOUSE_FILTER_STOP
-	button.pressed.connect(callback)
-	parent.add_child(button)
-
-func _get_sheet_text() -> String:
-	return "%s — %s %s %d\nStage 4C direct hotbar patch.\nNo enemies, damage, targeting, inventory, crafting, taming, quests, dialogue, or Skelerealms integration yet." % [CHARACTER_NAME, RACE_SPECIES_NAME, CLASS_NAME, CURRENT_LEVEL]
+	var label := Label.new()
+	label.text = "Stage 4C safe overlay loaded.\nReal-time hotbar shell only.\nNo enemies, damage, inventory, crafting, taming, quests, dialogue, or Skelerealms integration yet."
+	label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	label.offset_left = 14.0
+	label.offset_top = 14.0
+	label.offset_right = -14.0
+	label.offset_bottom = -14.0
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_sheet_panel.add_child(label)
 
 func _toggle_sheet() -> void:
 	_sheet_panel.visible = not _sheet_panel.visible
-	if _sheet_panel.visible:
-		_sheet_text.text = _get_sheet_text()
 
-func _hide_sheet() -> void:
-	_sheet_panel.visible = false
-
-func _preview_hotbar_frame() -> void:
-	_check_result_text.text = "The hotbar is now drawn directly from the working Sheet overlay autoload, bypassing the broken hotbar autoload path."
-
-func _preview_stage4_rules() -> void:
-	_check_result_text.text = "Combat remains real-time SWTOR-style on the surface, with D&D rules as the later math backbone. This pass is UI shell only."
-
-func _preview_skelerealms_alignment() -> void:
-	_check_result_text.text = "Skelerealms stays the later RPG/world-simulation backend. This UI does not hack Skelerealms internals."
-
-func _update_visibility() -> void:
+func _update_visible() -> void:
 	var scene := get_tree().current_scene
-	var in_playable_scene := scene != null and scene.get_node_or_null("PlaceholderPlayer") != null
-	_root.visible = in_playable_scene
-	if not in_playable_scene:
-		_hide_sheet()
+	var active := scene != null and scene.get_node_or_null("PlaceholderPlayer") != null
+	_root.visible = active
+	if not active and _sheet_panel != null:
+		_sheet_panel.visible = false
 
-func _update_stage_hud_labels() -> void:
+func _update_stage_labels() -> void:
 	var scene := get_tree().current_scene
 	if scene == null:
 		return
@@ -226,16 +143,10 @@ func _update_stage_hud_labels() -> void:
 		return
 	var instruction := controls.get_node_or_null("InstructionLabel") as Label
 	if instruction != null:
-		instruction.text = CURRENT_STAGE_TITLE
+		instruction.text = "Tales of Drak - Stage 4C"
 	var status := controls.get_node_or_null("StatusLabel") as Label
-	if status != null and status.text.begins_with("Stage "):
-		status.text = CURRENT_STAGE_STATUS
+	if status != null:
+		status.text = "Stage 4C: safe overlay hotbar shell."
 	var debug := controls.get_node_or_null("DebugLabel") as Label
 	if debug != null:
-		debug.text = _replace_stage_text(debug.text)
-
-func _replace_stage_text(text: String) -> String:
-	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G", "Stage 4A", "Stage 4B"]:
-		updated = updated.replace(stage_name, "Stage 4C")
-	return updated
+		debug.text = debug.text.replace("Stage 1I", "Stage 4C")
