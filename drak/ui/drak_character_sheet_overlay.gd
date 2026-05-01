@@ -32,31 +32,35 @@ func _build_hotbar() -> void:
 	_hotbar = Panel.new()
 	_hotbar.name = "Stage4CSafeHotbar"
 	_hotbar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	_hotbar.offset_left = 230.0
-	_hotbar.offset_top = -214.0
-	_hotbar.offset_right = -220.0
-	_hotbar.offset_bottom = -88.0
+	_hotbar.offset_left = 250.0
+	_hotbar.offset_top = -212.0
+	_hotbar.offset_right = -300.0
+	_hotbar.offset_bottom = -96.0
 	_hotbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(_hotbar)
 
 	var box := VBoxContainer.new()
+	box.name = "Stage4CHotbarBox"
 	box.set_anchors_preset(Control.PRESET_FULL_RECT)
-	box.offset_left = 8.0
-	box.offset_top = 6.0
-	box.offset_right = -8.0
-	box.offset_bottom = -6.0
+	box.offset_left = 10.0
+	box.offset_top = 7.0
+	box.offset_right = -10.0
+	box.offset_bottom = -7.0
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hotbar.add_child(box)
 
 	var top := HBoxContainer.new()
+	top.name = "Stage4CHotbarTopRow"
 	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(top)
 
 	var bottom := HBoxContainer.new()
+	bottom.name = "Stage4CHotbarBottomRow"
 	bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(bottom)
 
 	var strip := HBoxContainer.new()
+	strip.name = "Stage4CHotbarActionStrip"
 	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(strip)
 
@@ -72,20 +76,20 @@ func _build_hotbar() -> void:
 func _slot(text: String) -> Button:
 	var button := Button.new()
 	button.text = text
-	button.custom_minimum_size = Vector2(68, 34)
+	button.custom_minimum_size = Vector2(58, 30)
 	button.focus_mode = Control.FOCUS_NONE
 	button.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	button.add_theme_font_size_override("font_size", 10)
+	button.add_theme_font_size_override("font_size", 9)
 	return button
 
 func _strip(text: String) -> Label:
 	var label := Label.new()
 	label.text = text
-	label.custom_minimum_size = Vector2(120, 24)
+	label.custom_minimum_size = Vector2(104, 22)
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.add_theme_font_size_override("font_size", 11)
+	label.add_theme_font_size_override("font_size", 9)
 	label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.72, 1.0))
 	return label
 
@@ -146,7 +150,7 @@ func _update_stage_labels() -> void:
 		instruction.text = "Tales of Drak - Stage 4C"
 	var status := controls.get_node_or_null("StatusLabel") as Label
 	if status != null:
-		status.text = "Stage 4C: safe overlay hotbar shell."
+		status.text = "Stage 4C: tightened safe hotbar shell."
 	var debug := controls.get_node_or_null("DebugLabel") as Label
 	if debug != null:
 		debug.text = debug.text.replace("Stage 1I", "Stage 4C")
