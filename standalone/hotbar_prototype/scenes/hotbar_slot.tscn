@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/hotbar_slot.gd" id="1"]
+
+[node name="HotbarSlot" type="TextureButton"]
+custom_minimum_size = Vector2(58, 80)
+offset_right = 58.0
+offset_bottom = 80.0
+focus_mode = 0
+script = ExtResource("1")
+
+[node name="Icon" type="TextureRect" parent="."]
+visible = false
+
+[node name="KeyLabel" type="Label" parent="."]
+visible = false
+
+[node name="CooldownOverlay" type="TextureProgressBar" parent="."]
+visible = false
+
+[node name="CountLabel" type="Label" parent="."]
+visible = false
+
+[node name="SelectedGlow" type="TextureRect" parent="."]
+visible = false
+
+[node name="DisabledOverlay" type="ColorRect" parent="."]
+visible = false
