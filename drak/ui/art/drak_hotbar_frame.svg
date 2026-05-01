@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300">
+  <defs>
+    <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#151010"/>
+      <stop offset="0.18" stop-color="#050505"/>
+      <stop offset="0.74" stop-color="#010101"/>
+      <stop offset="1" stop-color="#171010"/>
+    </linearGradient>
+    <filter id="softShadow" x="-8%" y="-12%" width="116%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.8" flood-color="#000000" flood-opacity="0.9"/>
+    </filter>
+    <style>
+      .iron { fill: url(#iron); stroke: #020202; stroke-width: 3; filter: url(#softShadow); }
+      .deep { fill: #030303; stroke: #161010; stroke-width: 2; }
+      .rim { fill: none; stroke: #2d1613; stroke-width: 2; opacity: .82; }
+      .hair { fill: none; stroke: #7d2a20; stroke-width: 1; opacity: .45; }
+      .hi { fill: none; stroke: #c9b9ad; stroke-width: 1; opacity: .28; }
+      .slot { fill: rgba(255,255,255,0.02); stroke: #020202; stroke-width: 3; }
+      .slotInset { fill: none; stroke: #28201e; stroke-width: 1.4; opacity: .95; }
+      .orn { fill: #040404; stroke: #2b1715; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <path class="iron" d="M22 32 L878 32 L889 43 L889 184 L878 195 L22 195 L11 184 L11 43 Z"/>
+  <path class="rim" d="M27 38 L873 38 L883 47 L883 180 L873 190 L27 190 L17 180 L17 47 Z"/>
+  <path class="hair" d="M32 41 H868"/>
+  <path class="hi" d="M37 36 H863"/>
+  <path class="hair" d="M31 188 H869"/>
+
+  <rect x="20" y="109" width="860" height="16" rx="2" class="deep"/>
+  <path class="hair" d="M25 113 H875"/>
+  <path class="hi" d="M28 108 H872"/>
+
+  <g>
+    <rect class="slot" x="34" y="50" width="55" height="54"/><rect class="slotInset" x="38" y="54" width="47" height="46"/>
+    <rect class="slot" x="97" y="50" width="55" height="54"/><rect class="slotInset" x="101" y="54" width="47" height="46"/>
+    <rect class="slot" x="160" y="50" width="55" height="54"/><rect class="slotInset" x="164" y="54" width="47" height="46"/>
+    <rect class="slot" x="223" y="50" width="55" height="54"/><rect class="slotInset" x="227" y="54" width="47" height="46"/>
+    <rect class="slot" x="286" y="50" width="55" height="54"/><rect class="slotInset" x="290" y="54" width="47" height="46"/>
+    <rect class="slot" x="349" y="50" width="55" height="54"/><rect class="slotInset" x="353" y="54" width="47" height="46"/>
+    <rect class="slot" x="412" y="50" width="55" height="54"/><rect class="slotInset" x="416" y="54" width="47" height="46"/>
+    <rect class="slot" x="475" y="50" width="55" height="54"/><rect class="slotInset" x="479" y="54" width="47" height="46"/>
+    <rect class="slot" x="538" y="50" width="55" height="54"/><rect class="slotInset" x="542" y="54" width="47" height="46"/>
+    <rect class="slot" x="601" y="50" width="55" height="54"/><rect class="slotInset" x="605" y="54" width="47" height="46"/>
+    <rect class="slot" x="664" y="50" width="55" height="54"/><rect class="slotInset" x="668" y="54" width="47" height="46"/>
+    <rect class="slot" x="727" y="50" width="55" height="54"/><rect class="slotInset" x="731" y="54" width="47" height="46"/>
+    <rect class="slot" x="790" y="50" width="55" height="54"/><rect class="slotInset" x="794" y="54" width="47" height="46"/>
+  </g>
+
+  <g>
+    <rect class="slot" x="34" y="132" width="55" height="54"/><rect class="slotInset" x="38" y="136" width="47" height="46"/>
+    <rect class="slot" x="97" y="132" width="55" height="54"/><rect class="slotInset" x="101" y="136" width="47" height="46"/>
+    <rect class="slot" x="160" y="132" width="55" height="54"/><rect class="slotInset" x="164" y="136" width="47" height="46"/>
+    <rect class="slot" x="223" y="132" width="55" height="54"/><rect class="slotInset" x="227" y="136" width="47" height="46"/>
+    <rect class="slot" x="286" y="132" width="55" height="54"/><rect class="slotInset" x="290" y="136" width="47" height="46"/>
+    <rect class="slot" x="349" y="132" width="55" height="54"/><rect class="slotInset" x="353" y="136" width="47" height="46"/>
+    <rect class="slot" x="412" y="132" width="55" height="54"/><rect class="slotInset" x="416" y="136" width="47" height="46"/>
+    <rect class="slot" x="475" y="132" width="55" height="54"/><rect class="slotInset" x="479" y="136" width="47" height="46"/>
+    <rect class="slot" x="538" y="132" width="55" height="54"/><rect class="slotInset" x="542" y="136" width="47" height="46"/>
+    <rect class="slot" x="601" y="132" width="55" height="54"/><rect class="slotInset" x="605" y="136" width="47" height="46"/>
+    <rect class="slot" x="664" y="132" width="55" height="54"/><rect class="slotInset" x="668" y="136" width="47" height="46"/>
+    <rect class="slot" x="727" y="132" width="55" height="54"/><rect class="slotInset" x="731" y="136" width="47" height="46"/>
+    <rect class="slot" x="790" y="132" width="55" height="54"/><rect class="slotInset" x="794" y="136" width="47" height="46"/>
+  </g>
+
+  <path class="iron" d="M82 195 H818 L806 240 L535 240 L514 280 L493 240 L94 240 Z"/>
+  <path class="rim" d="M97 202 H803 L793 232 L527 232 L514 258 L501 232 L107 232 Z"/>
+  <path class="hair" d="M112 207 H788"/>
+  <path class="hi" d="M130 198 H770"/>
+  <path class="hair" d="M131 233 H487 M540 233 H789"/>
+
+  <g transform="translate(514 238)">
+    <path class="orn" d="M0 -52 L13 -18 L47 0 L13 18 L0 52 L-13 18 L-47 0 L-13 -18 Z"/>
+    <path class="deep" d="M0 -43 L6 -7 L0 35 L-6 -7 Z"/>
+    <path class="hi" d="M0 -43 V34"/>
+    <path class="hair" d="M-34 0 H34"/>
+    <circle cx="0" cy="0" r="6" fill="#0b0808" stroke="#5a201b" stroke-width="1.5"/>
+  </g>
+
+  <g>
+    <path class="orn" d="M18 35 C25 20 38 23 43 31 C35 33 31 40 26 47 C25 58 19 62 12 64 C19 54 10 46 18 35 Z"/>
+    <path class="orn" d="M882 35 C875 20 862 23 857 31 C865 33 869 40 874 47 C875 58 881 62 888 64 C881 54 890 46 882 35 Z"/>
+    <path class="orn" d="M18 192 C27 202 38 200 43 190 C33 188 29 183 23 174 C20 166 14 163 9 162 C17 171 10 181 18 192 Z"/>
+    <path class="orn" d="M882 192 C873 202 862 200 857 190 C867 188 871 183 877 174 C880 166 886 163 891 162 C883 171 890 181 882 192 Z"/>
+    <path class="hair" d="M25 43 C37 38 35 31 43 27"/>
+    <path class="hair" d="M875 43 C863 38 865 31 857 27"/>
+    <path class="hair" d="M28 183 C38 187 38 194 45 198"/>
+    <path class="hair" d="M872 183 C862 187 862 194 855 198"/>
+  </g>
+
+  <path class="hair" d="M245 202 V235 M375 202 V235 M645 202 V235 M775 202 V235"/>
+</svg>
