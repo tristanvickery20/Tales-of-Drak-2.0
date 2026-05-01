@@ -16,10 +16,9 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4B"
-const CURRENT_STAGE_STATUS := "Stage 4B: inactive mobile hotbar shell."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4C"
+const CURRENT_STAGE_STATUS := "Stage 4C: gothic hotbar design shell."
 const CURRENT_LEVEL := 1
-
 const CHARACTER_NAME := "Drak Test Hero"
 const RACE_SPECIES_NAME := "Variant Human"
 const CLASS_NAME := "Fighter"
@@ -102,7 +101,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 4B Sheet"
+	title.text = "Stage 4C Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -115,69 +114,14 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
-	var hotbar_shell_button := Button.new()
-	hotbar_shell_button.name = "PreviewHotbarShellButton"
-	hotbar_shell_button.text = "Hotbar Shell"
-	hotbar_shell_button.custom_minimum_size = Vector2(270, 32)
-	hotbar_shell_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	hotbar_shell_button.pressed.connect(_preview_hotbar_shell)
-	box.add_child(hotbar_shell_button)
-
-	var stage4_plan_button := Button.new()
-	stage4_plan_button.name = "PreviewStage4PlanButton"
-	stage4_plan_button.text = "Stage 4 Plan"
-	stage4_plan_button.custom_minimum_size = Vector2(270, 32)
-	stage4_plan_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	stage4_plan_button.pressed.connect(_preview_stage4_plan)
-	box.add_child(stage4_plan_button)
-
-	var stage3_audit_button := Button.new()
-	stage3_audit_button.name = "PreviewStage3AuditButton"
-	stage3_audit_button.text = "Stage 3 Audit"
-	stage3_audit_button.custom_minimum_size = Vector2(270, 32)
-	stage3_audit_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	stage3_audit_button.pressed.connect(_preview_stage3_audit)
-	box.add_child(stage3_audit_button)
-
-	var fighter_shell_button := Button.new()
-	fighter_shell_button.name = "PreviewFighterLevelOneShellButton"
-	fighter_shell_button.text = "Fighter 1"
-	fighter_shell_button.custom_minimum_size = Vector2(270, 32)
-	fighter_shell_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	fighter_shell_button.pressed.connect(_preview_fighter_level_one_shell)
-	box.add_child(fighter_shell_button)
-
-	var class_registry_button := Button.new()
-	class_registry_button.name = "PreviewClassRegistryButton"
-	class_registry_button.text = "Classes"
-	class_registry_button.custom_minimum_size = Vector2(270, 32)
-	class_registry_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	class_registry_button.pressed.connect(_preview_class_registry)
-	box.add_child(class_registry_button)
-
-	var race_registry_button := Button.new()
-	race_registry_button.name = "PreviewRaceSpeciesRegistryButton"
-	race_registry_button.text = "Races"
-	race_registry_button.custom_minimum_size = Vector2(270, 32)
-	race_registry_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	race_registry_button.pressed.connect(_preview_race_species_registry)
-	box.add_child(race_registry_button)
-
-	var identity_button := Button.new()
-	identity_button.name = "PreviewCharacterIdentityButton"
-	identity_button.text = "Identity"
-	identity_button.custom_minimum_size = Vector2(270, 32)
-	identity_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	identity_button.pressed.connect(_preview_character_identity)
-	box.add_child(identity_button)
-
-	var rules_audit_button := Button.new()
-	rules_audit_button.name = "PreviewRulesAuditButton"
-	rules_audit_button.text = "Rules Audit"
-	rules_audit_button.custom_minimum_size = Vector2(270, 32)
-	rules_audit_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	rules_audit_button.pressed.connect(_preview_rules_audit)
-	box.add_child(rules_audit_button)
+	_add_button(box, "Gothic Hotbar", _preview_hotbar_shell)
+	_add_button(box, "Stage 4 Plan", _preview_stage4_plan)
+	_add_button(box, "Stage 3 Audit", _preview_stage3_audit)
+	_add_button(box, "Fighter 1", _preview_fighter_level_one_shell)
+	_add_button(box, "Classes", _preview_class_registry)
+	_add_button(box, "Races", _preview_race_species_registry)
+	_add_button(box, "Identity", _preview_character_identity)
+	_add_button(box, "Rules Audit", _preview_rules_audit)
 
 	_check_result_text = Label.new()
 	_check_result_text.name = "CheckResultText"
@@ -192,32 +136,28 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Hotbar is visible but inactive. No combat/damage/enemies yet."
+	note.text = "Hotbar design shell only. No combat/damage/enemies yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(note)
 
-	var close_button := Button.new()
-	close_button.name = "CloseCharacterSheetButton"
-	close_button.text = "Close"
-	close_button.custom_minimum_size = Vector2(220, 36)
-	close_button.mouse_filter = Control.MOUSE_FILTER_STOP
-	close_button.pressed.connect(_hide_sheet)
-	box.add_child(close_button)
+	_add_button(box, "Close", _hide_sheet, Vector2(220, 36))
+
+func _add_button(parent: Control, text: String, callback: Callable, min_size := Vector2(270, 32)) -> void:
+	var button := Button.new()
+	button.text = text
+	button.custom_minimum_size = min_size
+	button.focus_mode = Control.FOCUS_NONE
+	button.mouse_filter = Control.MOUSE_FILTER_STOP
+	button.pressed.connect(callback)
+	parent.add_child(button)
 
 func _get_sheet_text() -> String:
-	return "%s\nStage 4B: inactive mobile hotbar shell\nVisible hotbar: 8 labels / 2 rows\nCombat style: SWTOR-style buttons + cooldowns\nRules: D&D math backbone, not turn-based" % [
-		_get_character_identity_summary(),
-	]
+	return "%s\nStage 4C: gothic hotbar design shell\nTwo rows of keyed slots + bottom action strip\nSlots are tappable/clickable previews only\nRules: D&D math backbone, not turn-based" % [_get_character_identity_summary()]
 
 func _get_character_identity_summary() -> String:
-	return "%s — %s %s %d" % [
-		CHARACTER_NAME,
-		RACE_SPECIES_NAME,
-		CLASS_NAME,
-		CURRENT_LEVEL,
-	]
+	return "%s — %s %s %d" % [CHARACTER_NAME, RACE_SPECIES_NAME, CLASS_NAME, CURRENT_LEVEL]
 
 func _toggle_sheet() -> void:
 	_sheet_panel.visible = not _sheet_panel.visible
@@ -228,10 +168,10 @@ func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
 func _preview_hotbar_shell() -> void:
-	_check_result_text.text = "Stage 4B: visible 2-row hotbar shell only. Buttons are labels; no actions yet."
+	_check_result_text.text = "Stage 4C: gothic two-row hotbar shell. Pressing slots only highlights/previews."
 
 func _preview_stage4_plan() -> void:
-	_check_result_text.text = "Stage 4 plan: add combat in tiny steps after hotbar shell stays stable."
+	_check_result_text.text = "Next: refine placement, then harmless slot press feedback/cooldowns."
 
 func _preview_stage3_audit() -> void:
 	_check_result_text.text = "Stage 3 preserved: identity, approved races/classes, and class shells."
@@ -249,7 +189,7 @@ func _preview_character_identity() -> void:
 	_check_result_text.text = "Identity: Variant Human Fighter 1. Labels only for now."
 
 func _preview_rules_audit() -> void:
-	_check_result_text.text = "Stage 2 rules foundation preserved. D&D rules support future real-time combat."
+	_check_result_text.text = "Stage 2 rules foundation preserved for future real-time combat."
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
@@ -265,21 +205,18 @@ func _update_stage_hud_labels() -> void:
 	var controls := scene.get_node_or_null("MobileTestControls/Controls")
 	if controls == null:
 		return
-
 	var instruction := controls.get_node_or_null("InstructionLabel") as Label
 	if instruction != null:
 		instruction.text = CURRENT_STAGE_TITLE
-
 	var status := controls.get_node_or_null("StatusLabel") as Label
 	if status != null and status.text.begins_with("Stage "):
 		status.text = CURRENT_STAGE_STATUS
-
 	var debug := controls.get_node_or_null("DebugLabel") as Label
 	if debug != null:
 		debug.text = _replace_stage_text(debug.text)
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G", "Stage 4A"]:
-		updated = updated.replace(stage_name, "Stage 4B")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G", "Stage 4A", "Stage 4B"]:
+		updated = updated.replace(stage_name, "Stage 4C")
 	return updated
