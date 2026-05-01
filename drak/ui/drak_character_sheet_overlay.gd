@@ -1,22 +1,27 @@
 extends CanvasLayer
 
 const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4C"
-const CURRENT_STAGE_STATUS := "Stage 4C: image-backed hotbar frame shell."
+const CURRENT_STAGE_STATUS := "Stage 4C: direct hotbar drawn from Sheet overlay."
 const CHARACTER_NAME := "Drak Test Hero"
 const RACE_SPECIES_NAME := "Variant Human"
 const CLASS_NAME := "Fighter"
 const CURRENT_LEVEL := 1
+
+const HOTBAR_TOP := ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "="]
+const HOTBAR_BOTTOM := ["Q", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "-"]
+const HOTBAR_ABILITIES := ["Weapon", "Class", "Range", "Guard", "Heal", "Control", "Tame", "Dodge"]
 
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
 var _sheet_text: Label
 var _check_result_text: Label
+var _hotbar_panel: Panel
 var _last_scene: Node
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	layer = 20
+	layer = 90
 	_build_overlay()
 	_update_visibility()
 
@@ -33,6 +38,88 @@ func _build_overlay() -> void:
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_root)
 
+	_build_direct_hotbar()
+	_build_sheet()
+
+func _build_direct_hotbar() -> void:
+	_hotbar_panel = Panel.new()
+	_hotbar_panel.name = "Stage4CDirectVisibleHotbar"
+	_hotbar_panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	_hotbar_panel.offset_left = 74.0
+	_hotbar_panel.offset_top = -170.0
+	_hotbar_panel.offset_right = -74.0
+	_hotbar_panel.offset_bottom = -36.0
+	_hotbar_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(_hotbar_panel)
+
+	var box := VBoxContainer.new()
+	box.name = "HotbarBox"
+	box.set_anchors_preset(Control.PRESET_FULL_RECT)
+	box.offset_left = 10.0
+	box.offset_top = 6.0
+	box.offset_right = -10.0
+	box.offset_bottom = -6.0
+	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hotbar_panel.add_child(box)
+
+	var top_row := HBoxContainer.new()
+	top_row.name = "HotbarTopRow"
+	top_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(top_row)
+
+	var bottom_row := HBoxContainer.new()
+	bottom_row.name = "HotbarBottomRow"
+	bottom_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(bottom_row)
+
+	var strip_row := HBoxContainer.new()
+	strip_row.name = "HotbarActionStrip"
+	strip_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	box.add_child(strip_row)
+
+	for i in range(HOTBAR_TOP.size()):
+		var ability := HOTBAR_ABILITIES[i] if i < 4 else ""
+		top_row.add_child(_make_hotbar_slot(HOTBAR_TOP[i], ability))
+
+	for i in range(HOTBAR_BOTTOM.size()):
+		var ability_index := i + 4
+		var ability := HOTBAR_ABILITIES[ability_index] if ability_index < HOTBAR_ABILITIES.size() else ""
+		bottom_row.add_child(_make_hotbar_slot(HOTBAR_BOTTOM[i], ability))
+
+	strip_row.add_child(_make_strip_label("ACTION\n◆ ◆ ◆ ◆"))
+	strip_row.add_child(_make_strip_label("BONUS\n◇ ◇ ◇ ◇"))
+	strip_row.add_child(_make_strip_label("⚔"))
+	strip_row.add_child(_make_strip_label("REACTION\n◆"))
+	strip_row.add_child(_make_strip_label("MOVE\n◆ ◆ ◆ ◆"))
+
+func _make_hotbar_slot(key_text: String, ability_text: String) -> Panel:
+	var panel := Panel.new()
+	panel.custom_minimum_size = Vector2(64, 38)
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	var label := Label.new()
+	label.text = "%s\n%s" % [key_text, ability_text]
+	label.set_anchors_preset(Control.PRESET_FULL_RECT)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_size_override("font_size", 10)
+	label.add_theme_color_override("font_color", Color(0.08, 0.07, 0.05, 1.0))
+	panel.add_child(label)
+	return panel
+
+func _make_strip_label(text: String) -> Label:
+	var label := Label.new()
+	label.text = text
+	label.custom_minimum_size = Vector2(126, 30)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.add_theme_font_size_override("font_size", 11)
+	label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.72, 1.0))
+	return label
+
+func _build_sheet() -> void:
 	_sheet_button = Button.new()
 	_sheet_button.name = "CharacterSheetButton"
 	_sheet_button.text = "Sheet"
@@ -80,13 +167,13 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
-	_add_button(box, "Hotbar Frame", _preview_hotbar_frame)
+	_add_button(box, "Hotbar Direct", _preview_hotbar_frame)
 	_add_button(box, "Stage 4 Rules", _preview_stage4_rules)
 	_add_button(box, "Skelerealms Alignment", _preview_skelerealms_alignment)
 	_add_button(box, "Close", _hide_sheet, Vector2(220, 36))
 
 	_check_result_text = Label.new()
-	_check_result_text.text = "Stage 4C: image-backed hotbar frame shell only."
+	_check_result_text.text = "Stage 4C: direct hotbar is drawn from the Sheet overlay autoload."
 	_check_result_text.custom_minimum_size = Vector2(270, 92)
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -104,7 +191,7 @@ func _add_button(parent: Control, text: String, callback: Callable, min_size := 
 	parent.add_child(button)
 
 func _get_sheet_text() -> String:
-	return "%s — %s %s %d\nStage 4C retry: art frame anchored to the working 4B hotbar zone.\nNo enemies, damage, targeting, inventory, crafting, taming, quests, dialogue, or Skelerealms integration yet." % [CHARACTER_NAME, RACE_SPECIES_NAME, CLASS_NAME, CURRENT_LEVEL]
+	return "%s — %s %s %d\nStage 4C direct hotbar patch.\nNo enemies, damage, targeting, inventory, crafting, taming, quests, dialogue, or Skelerealms integration yet." % [CHARACTER_NAME, RACE_SPECIES_NAME, CLASS_NAME, CURRENT_LEVEL]
 
 func _toggle_sheet() -> void:
 	_sheet_panel.visible = not _sheet_panel.visible
@@ -115,7 +202,7 @@ func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
 func _preview_hotbar_frame() -> void:
-	_check_result_text.text = "The visible hotbar should now use the embedded gothic frame art, with temporary labels on top."
+	_check_result_text.text = "The hotbar is now drawn directly from the working Sheet overlay autoload, bypassing the broken hotbar autoload path."
 
 func _preview_stage4_rules() -> void:
 	_check_result_text.text = "Combat remains real-time SWTOR-style on the surface, with D&D rules as the later math backbone. This pass is UI shell only."
