@@ -1,51 +1,67 @@
 # Tales of Drak Change Log
 
+## Stage 4C Safe Realignment Patch
+
+Status: pushed, awaiting iPhone/GitHub Pages confirmation.
+
+### Real Cause Found
+- The visible iPhone UI is created by `scripts/mobile_test_controls.gd`.
+- Earlier Stage 4C attempts were too focused on separate UI autoloads.
+- The live visible screen staying on Stage 1I proved the build was still showing the scene's built-in mobile controls.
+- The correct strategy is to keep the visible scene UI stable and use a tiny safe overlay only as a test layer until the hotbar can be integrated directly.
+
+### Changed
+- `drak/ui/drak_hotbar_overlay.gd` was reduced to a harmless no-op autoload so it cannot crash or duplicate UI during realignment.
+- `drak/ui/drak_character_sheet_overlay.gd` was replaced with a small safe Stage 4C overlay.
+
+### Added Back Safely
+- Stage 4C title/status label override.
+- A visible bottom hotbar shell.
+- A Sheet button and simple Sheet panel.
+
+### Preserved
+- Movement.
+- Drag joystick.
+- Jump.
+- Interact.
+- Reset.
+- Pause/Menu.
+- Pickups.
+- Cave transitions.
+- Stage 2 rules foundation.
+- Stage 3 character/race/class foundation.
+
+### Still Not Added
+- No real enemies.
+- No real damage.
+- No targeting.
+- No cooldown execution.
+- No inventory/equipment.
+- No spell attacks or spell saves.
+- No real class features or race traits.
+- No crafting.
+- No taming.
+- No quests or dialogue.
+- No Skelerealms integration yet.
+
+### Alignment Notes
+- Skelerealms remains the later RPG/world-simulation backend.
+- The hotbar is a Tales of Drak UI layer only.
+- No Skelerealms internals were edited.
+
 ## Stage 4C Retry — Image-Backed Gothic Hotbar Frame
 
-Status: added, awaiting iPhone test confirmation.
+Status: superseded by Stage 4C Safe Realignment Patch.
 
 ### Added
 - Added `drak/ui/drak_hotbar_frame_texture.gd`.
 - Embedded the cleaned gothic hotbar frame as a Godot-generated texture.
 - Rebuilt `drak/ui/drak_hotbar_overlay.gd` from the confirmed Stage 4B placement baseline instead of the failed viewport-math layout.
-- Added a TextureRect-based visible hotbar frame anchored near the same safe bottom area as Stage 4B.
-- Added temporary text placeholders over the frame:
-  - `1 Weapon`
-  - `2 Class`
-  - `3 Range`
-  - `4 Guard`
-  - `5 Heal`
-  - `6 Control`
-  - `7 Tame`
-  - `8 Dodge`
-- Added bottom action strip placeholder labels:
-  - ACTION
-  - BONUS
-  - REACTION
-  - MOVE
-- Updated `drak/ui/drak_character_sheet_overlay.gd` to Stage 4C retry labels.
-- Updated Sheet notes to clearly say this is an image-backed hotbar frame shell only.
+- Added temporary text placeholders over the frame.
 
-### Current Placeholder Rules
-- This is still a UI shell only.
-- No active combat behavior is added.
-- No enemies, targeting, damage, cooldown application, weapon inventory, spells, class features, crafting, taming, quests, dialogue, or Skelerealms integration are active yet.
-
-### Preserved
-- iPhone Safari/GitHub Pages test loop.
-- Main menu and Start Game flow.
-- Pause, Sheet, and Menu buttons.
-- Drag movement.
-- Jump, Interact, Reset, and Camera buttons.
-- Pickups.
-- Cave entrance and exit transitions.
-- Stage 2 rules foundation.
-- Stage 3 character/race/class foundation.
-
-### Alignment Notes
-- Skelerealms remains the later RPG/world-simulation backend.
-- This hotbar UI does not edit or hack Skelerealms internals.
-- The hotbar is being built as a Tales of Drak UI layer under `res://drak/` so it can later call Drak combat/rules adapters cleanly.
+### Problem
+- The image-backed approach did not reliably appear in the iPhone Safari build.
+- The project was realigned to a smaller safe overlay approach.
 
 ## Stage 4B Restore — Safe Hotbar Baseline
 
@@ -58,7 +74,7 @@ Status: confirmed visible on iPhone.
 
 ## Stage 4C — Failed Coded Gothic Shell Attempt
 
-Status: replaced by Stage 4C Retry.
+Status: replaced.
 
 ### Problem
 - The first Stage 4C coded shell did not appear correctly on the iPhone viewport.
