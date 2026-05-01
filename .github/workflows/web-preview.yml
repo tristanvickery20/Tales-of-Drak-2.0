@@ -11,12 +11,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Export Godot Web Build
+    name: Prepare Static Web Preview
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -25,39 +25,15 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
-      - name: Export Godot project to Web
-        id: export
-        uses: firebelley/godot-export@v7.0.0
-        with:
-          godot_executable_download_url: https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_linux.x86_64.zip
-          godot_export_templates_download_url: https://github.com/godotengine/godot-builds/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
-          relative_project_path: ./
-          presets_to_export: Web
-          use_preset_export_path: true
-          archive_output: false
-          cache: true
-
       - name: Prepare Pages artifact root
         run: |
-          echo "Looking for exported web files..."
-          find . -maxdepth 5 -type f | sort
           rm -rf public
           mkdir -p public
-          if [ -f "build/web/index.html" ]; then
-            cp -R build/web/. public/
-          else
-            FOUND_INDEX=$(find . -path "*/index.html" -type f | head -n 1)
-            if [ -z "$FOUND_INDEX" ]; then
-              echo "No exported index.html was found. The Pages site would 404."
-              exit 1
-            fi
-            FOUND_DIR=$(dirname "$FOUND_INDEX")
-            echo "Using exported site folder: $FOUND_DIR"
-            cp -R "$FOUND_DIR"/. public/
-          fi
+          cp index.html public/index.html
+          mkdir -p public/hotbar
+          cp hotbar/index.html public/hotbar/index.html
           touch public/.nojekyll
-          echo "Prepared Pages files:"
-          find public -maxdepth 2 -type f | sort
+          find public -maxdepth 3 -type f | sort
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -70,7 +46,6 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy preview
         id: deployment
