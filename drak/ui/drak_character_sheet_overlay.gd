@@ -16,9 +16,10 @@ const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progressi
 const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
 const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
 
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4C"
-const CURRENT_STAGE_STATUS := "Stage 4C: gothic hotbar design shell."
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4B"
+const CURRENT_STAGE_STATUS := "Stage 4B: inactive mobile hotbar shell."
 const CURRENT_LEVEL := 1
+
 const CHARACTER_NAME := "Drak Test Hero"
 const RACE_SPECIES_NAME := "Variant Human"
 const CLASS_NAME := "Fighter"
@@ -101,7 +102,7 @@ func _build_overlay() -> void:
 
 	var title := Label.new()
 	title.name = "CharacterSheetTitle"
-	title.text = "Stage 4C Sheet"
+	title.text = "Stage 4B Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
@@ -114,7 +115,7 @@ func _build_overlay() -> void:
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
-	_add_button(box, "Gothic Hotbar", _preview_hotbar_shell)
+	_add_button(box, "Hotbar Shell", _preview_hotbar_shell)
 	_add_button(box, "Stage 4 Plan", _preview_stage4_plan)
 	_add_button(box, "Stage 3 Audit", _preview_stage3_audit)
 	_add_button(box, "Fighter 1", _preview_fighter_level_one_shell)
@@ -136,7 +137,7 @@ func _build_overlay() -> void:
 
 	var note := Label.new()
 	note.name = "CharacterSheetNote"
-	note.text = "Hotbar design shell only. No combat/damage/enemies yet."
+	note.text = "Hotbar is visible but inactive. No combat/damage/enemies yet."
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -154,7 +155,7 @@ func _add_button(parent: Control, text: String, callback: Callable, min_size := 
 	parent.add_child(button)
 
 func _get_sheet_text() -> String:
-	return "%s\nStage 4C: gothic hotbar design shell\nTwo rows of keyed slots + bottom action strip\nSlots are tappable/clickable previews only\nRules: D&D math backbone, not turn-based" % [_get_character_identity_summary()]
+	return "%s\nStage 4B: inactive mobile hotbar shell\nVisible hotbar: 8 labels / 2 rows\nCombat style: SWTOR-style buttons + cooldowns\nRules: D&D math backbone, not turn-based" % [_get_character_identity_summary()]
 
 func _get_character_identity_summary() -> String:
 	return "%s — %s %s %d" % [CHARACTER_NAME, RACE_SPECIES_NAME, CLASS_NAME, CURRENT_LEVEL]
@@ -168,10 +169,10 @@ func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
 func _preview_hotbar_shell() -> void:
-	_check_result_text.text = "Stage 4C: gothic two-row hotbar shell. Pressing slots only highlights/previews."
+	_check_result_text.text = "Stage 4B: visible 2-row hotbar shell only. Slots are labels; no actions yet."
 
 func _preview_stage4_plan() -> void:
-	_check_result_text.text = "Next: refine placement, then harmless slot press feedback/cooldowns."
+	_check_result_text.text = "Stage 4 plan: retry art only after baseline placement is confirmed."
 
 func _preview_stage3_audit() -> void:
 	_check_result_text.text = "Stage 3 preserved: identity, approved races/classes, and class shells."
@@ -217,6 +218,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G", "Stage 4A", "Stage 4B"]:
-		updated = updated.replace(stage_name, "Stage 4C")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G", "Stage 4A", "Stage 4C"]:
+		updated = updated.replace(stage_name, "Stage 4B")
 	return updated
