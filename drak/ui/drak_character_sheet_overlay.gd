@@ -1,44 +1,12 @@
 extends CanvasLayer
 
-const ABILITY_SCORES_SCRIPT := preload("res://drak/rules/drak_ability_scores.gd")
-const DICE_ROLLER_SCRIPT := preload("res://drak/rules/drak_dice_roller.gd")
-const SKILL_REGISTRY_SCRIPT := preload("res://drak/rules/drak_skill_registry.gd")
-const PASSIVE_SCORES_SCRIPT := preload("res://drak/rules/drak_passive_scores.gd")
-const HIT_POINTS_SCRIPT := preload("res://drak/rules/drak_hit_points.gd")
-const ARMOR_CLASS_SCRIPT := preload("res://drak/rules/drak_armor_class.gd")
-const SAVING_THROWS_SCRIPT := preload("res://drak/rules/drak_saving_throws.gd")
-const CONDITION_TRACKER_SCRIPT := preload("res://drak/rules/drak_condition_tracker.gd")
-const ACTION_ECONOMY_SCRIPT := preload("res://drak/rules/drak_action_economy.gd")
-const COOLDOWN_TRACKER_SCRIPT := preload("res://drak/rules/drak_cooldown_tracker.gd")
-const DAMAGE_TYPES_SCRIPT := preload("res://drak/rules/drak_damage_types.gd")
-const REST_TRACKER_SCRIPT := preload("res://drak/rules/drak_rest_tracker.gd")
-const LEVEL_PROGRESSION_SCRIPT := preload("res://drak/rules/drak_level_progression.gd")
-const SPELLCASTING_SCRIPT := preload("res://drak/rules/drak_spellcasting.gd")
-const RULES_MANIFEST_SCRIPT := preload("res://drak/rules/drak_rules_manifest.gd")
-
-const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4B"
-const CURRENT_STAGE_STATUS := "Stage 4B: inactive mobile hotbar shell."
-const CURRENT_LEVEL := 1
-
+const CURRENT_STAGE_TITLE := "Tales of Drak — Stage 4C"
+const CURRENT_STAGE_STATUS := "Stage 4C: image-backed hotbar frame shell."
 const CHARACTER_NAME := "Drak Test Hero"
 const RACE_SPECIES_NAME := "Variant Human"
 const CLASS_NAME := "Fighter"
+const CURRENT_LEVEL := 1
 
-var _ability_scores: DrakAbilityScores = ABILITY_SCORES_SCRIPT.new()
-var _dice_roller: DrakDiceRoller = DICE_ROLLER_SCRIPT.new()
-var _skill_registry: DrakSkillRegistry = SKILL_REGISTRY_SCRIPT.new()
-var _passive_scores: DrakPassiveScores = PASSIVE_SCORES_SCRIPT.new()
-var _hit_points: DrakHitPoints = HIT_POINTS_SCRIPT.new()
-var _armor_class: DrakArmorClass = ARMOR_CLASS_SCRIPT.new()
-var _saving_throws: DrakSavingThrows = SAVING_THROWS_SCRIPT.new()
-var _condition_tracker: DrakConditionTracker = CONDITION_TRACKER_SCRIPT.new()
-var _action_economy: DrakActionEconomy = ACTION_ECONOMY_SCRIPT.new()
-var _cooldown_tracker: DrakCooldownTracker = COOLDOWN_TRACKER_SCRIPT.new()
-var _damage_types: DrakDamageTypes = DAMAGE_TYPES_SCRIPT.new()
-var _rest_tracker: DrakRestTracker = REST_TRACKER_SCRIPT.new()
-var _level_progression: DrakLevelProgression = LEVEL_PROGRESSION_SCRIPT.new()
-var _spellcasting: DrakSpellcasting = SPELLCASTING_SCRIPT.new()
-var _rules_manifest: DrakRulesManifest = RULES_MANIFEST_SCRIPT.new()
 var _root: Control
 var _sheet_button: Button
 var _sheet_panel: Panel
@@ -49,7 +17,6 @@ var _last_scene: Node
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 20
-	_action_economy.reset_turn()
 	_build_overlay()
 	_update_visibility()
 
@@ -83,9 +50,9 @@ func _build_overlay() -> void:
 	_sheet_panel.name = "CharacterSheetPanel"
 	_sheet_panel.set_anchors_preset(Control.PRESET_CENTER)
 	_sheet_panel.offset_left = -180.0
-	_sheet_panel.offset_top = -240.0
+	_sheet_panel.offset_top = -210.0
 	_sheet_panel.offset_right = 180.0
-	_sheet_panel.offset_bottom = 240.0
+	_sheet_panel.offset_bottom = 210.0
 	_sheet_panel.visible = false
 	_sheet_panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	_root.add_child(_sheet_panel)
@@ -94,58 +61,40 @@ func _build_overlay() -> void:
 	box.name = "CharacterSheetBox"
 	box.set_anchors_preset(Control.PRESET_FULL_RECT)
 	box.offset_left = 18.0
-	box.offset_top = 10.0
+	box.offset_top = 12.0
 	box.offset_right = -18.0
-	box.offset_bottom = -10.0
+	box.offset_bottom = -12.0
 	box.mouse_filter = Control.MOUSE_FILTER_PASS
 	_sheet_panel.add_child(box)
 
 	var title := Label.new()
-	title.name = "CharacterSheetTitle"
-	title.text = "Stage 4B Sheet"
+	title.text = "Stage 4C Sheet"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(title)
 
 	_sheet_text = Label.new()
-	_sheet_text.name = "SheetSummaryText"
 	_sheet_text.text = _get_sheet_text()
 	_sheet_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sheet_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_sheet_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_sheet_text)
 
-	_add_button(box, "Hotbar Shell", _preview_hotbar_shell)
-	_add_button(box, "Stage 4 Plan", _preview_stage4_plan)
-	_add_button(box, "Stage 3 Audit", _preview_stage3_audit)
-	_add_button(box, "Fighter 1", _preview_fighter_level_one_shell)
-	_add_button(box, "Classes", _preview_class_registry)
-	_add_button(box, "Races", _preview_race_species_registry)
-	_add_button(box, "Identity", _preview_character_identity)
-	_add_button(box, "Rules Audit", _preview_rules_audit)
+	_add_button(box, "Hotbar Frame", _preview_hotbar_frame)
+	_add_button(box, "Stage 4 Rules", _preview_stage4_rules)
+	_add_button(box, "Skelerealms Alignment", _preview_skelerealms_alignment)
+	_add_button(box, "Close", _hide_sheet, Vector2(220, 36))
 
 	_check_result_text = Label.new()
-	_check_result_text.name = "CheckResultText"
-	_check_result_text.text = "Tap a button for details."
-	_check_result_text.custom_minimum_size = Vector2(270, 44)
-	_check_result_text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_check_result_text.text = "Stage 4C: image-backed hotbar frame shell only."
+	_check_result_text.custom_minimum_size = Vector2(270, 92)
 	_check_result_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_check_result_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_check_result_text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_check_result_text.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_child(_check_result_text)
 
-	var note := Label.new()
-	note.name = "CharacterSheetNote"
-	note.text = "Hotbar is visible but inactive. No combat/damage/enemies yet."
-	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	note.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(note)
-
-	_add_button(box, "Close", _hide_sheet, Vector2(220, 36))
-
-func _add_button(parent: Control, text: String, callback: Callable, min_size := Vector2(270, 32)) -> void:
+func _add_button(parent: Control, text: String, callback: Callable, min_size := Vector2(270, 34)) -> void:
 	var button := Button.new()
 	button.text = text
 	button.custom_minimum_size = min_size
@@ -155,10 +104,7 @@ func _add_button(parent: Control, text: String, callback: Callable, min_size := 
 	parent.add_child(button)
 
 func _get_sheet_text() -> String:
-	return "%s\nStage 4B: inactive mobile hotbar shell\nVisible hotbar: 8 labels / 2 rows\nCombat style: SWTOR-style buttons + cooldowns\nRules: D&D math backbone, not turn-based" % [_get_character_identity_summary()]
-
-func _get_character_identity_summary() -> String:
-	return "%s — %s %s %d" % [CHARACTER_NAME, RACE_SPECIES_NAME, CLASS_NAME, CURRENT_LEVEL]
+	return "%s — %s %s %d\nStage 4C retry: art frame anchored to the working 4B hotbar zone.\nNo enemies, damage, targeting, inventory, crafting, taming, quests, dialogue, or Skelerealms integration yet." % [CHARACTER_NAME, RACE_SPECIES_NAME, CLASS_NAME, CURRENT_LEVEL]
 
 func _toggle_sheet() -> void:
 	_sheet_panel.visible = not _sheet_panel.visible
@@ -168,29 +114,14 @@ func _toggle_sheet() -> void:
 func _hide_sheet() -> void:
 	_sheet_panel.visible = false
 
-func _preview_hotbar_shell() -> void:
-	_check_result_text.text = "Stage 4B: visible 2-row hotbar shell only. Slots are labels; no actions yet."
+func _preview_hotbar_frame() -> void:
+	_check_result_text.text = "The visible hotbar should now use the embedded gothic frame art, with temporary labels on top."
 
-func _preview_stage4_plan() -> void:
-	_check_result_text.text = "Stage 4 plan: retry art only after baseline placement is confirmed."
+func _preview_stage4_rules() -> void:
+	_check_result_text.text = "Combat remains real-time SWTOR-style on the surface, with D&D rules as the later math backbone. This pass is UI shell only."
 
-func _preview_stage3_audit() -> void:
-	_check_result_text.text = "Stage 3 preserved: identity, approved races/classes, and class shells."
-
-func _preview_fighter_level_one_shell() -> void:
-	_check_result_text.text = "Fighter 1 shell preserved. No active features/combat yet."
-
-func _preview_class_registry() -> void:
-	_check_result_text.text = "Approved classes: Fighter, Wizard, Cleric, Warlock, Rogue, Barbarian, Ranger."
-
-func _preview_race_species_registry() -> void:
-	_check_result_text.text = "Approved races: Elf, Variant Human, Dwarf, Orc. No traits/stat changes."
-
-func _preview_character_identity() -> void:
-	_check_result_text.text = "Identity: Variant Human Fighter 1. Labels only for now."
-
-func _preview_rules_audit() -> void:
-	_check_result_text.text = "Stage 2 rules foundation preserved for future real-time combat."
+func _preview_skelerealms_alignment() -> void:
+	_check_result_text.text = "Skelerealms stays the later RPG/world-simulation backend. This UI does not hack Skelerealms internals."
 
 func _update_visibility() -> void:
 	var scene := get_tree().current_scene
@@ -218,6 +149,6 @@ func _update_stage_hud_labels() -> void:
 
 func _replace_stage_text(text: String) -> String:
 	var updated := text
-	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G", "Stage 4A", "Stage 4C"]:
-		updated = updated.replace(stage_name, "Stage 4B")
+	for stage_name in ["Stage 11", "Stage 1I", "Stage 1E", "Stage 1F", "Stage 1G", "Stage 1H", "Stage 2A", "Stage 2B", "Stage 2C", "Stage 2D", "Stage 2E", "Stage 2F", "Stage 2G", "Stage 2H", "Stage 2I", "Stage 2J", "Stage 2K", "Stage 2L", "Stage 2M", "Stage 2N", "Stage 2O", "Stage 2P", "Stage 2Q", "Stage 2R", "Stage 3A", "Stage 3B", "Stage 3C", "Stage 3D", "Stage 3E", "Stage 3F", "Stage 3G", "Stage 4A", "Stage 4B"]:
+		updated = updated.replace(stage_name, "Stage 4C")
 	return updated
