@@ -5,11 +5,35 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Tales of Drak Hotbar</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#f7f6f2;font-family:Georgia,'Times New Roman',serif}.stage{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:10px 10px calc(24px + env(safe-area-inset-bottom))}.bar{position:relative;width:min(98vw,1500px);aspect-ratio:500/159;filter:drop-shadow(0 10px 16px #0008)}.shell{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:0;opacity:0}.shell.ready{opacity:1}.slot{position:absolute;border:0;background:transparent;padding:0;margin:0;overflow:visible;-webkit-tap-highlight-color:transparent;z-index:4;cursor:pointer}.slot.debug{background:rgba(255,0,0,.10);outline:1px solid rgba(255,0,0,.65)}.slot:disabled{cursor:default}.key{position:absolute;left:0;right:0;top:4%;height:24%;text-align:center;color:#cdb486;font-size:clamp(11px,3.1vw,19px);line-height:1;text-shadow:0 1px 0 #000,0 2px 4px rgba(0,0,0,.95),0 0 7px rgba(255,238,196,.24);letter-spacing:.045em;pointer-events:none;z-index:6}.iconFx{position:absolute;left:0;right:0;bottom:0;height:70.5%;overflow:hidden;pointer-events:none;z-index:5}.flash{position:absolute;inset:-4%;border:2px solid rgba(255,70,70,.98);box-shadow:0 0 9px rgba(255,48,48,.95),0 0 20px rgba(255,0,0,.62),inset 0 0 7px rgba(255,70,70,.35);opacity:0;pointer-events:none;z-index:8}.slot.active .flash{animation:flash .28s ease-out forwards}@keyframes flash{0%{opacity:1;filter:brightness(1.7)}100%{opacity:0;filter:brightness(1)}}.cooldown{position:absolute;left:0;right:0;top:0;height:0;background:rgba(0,0,0,.68);box-shadow:inset 0 0 14px #000;transition:height 2.4s linear;pointer-events:none;z-index:7}.slot.cooling .iconFx{filter:saturate(.75) brightness(.82)}.count{position:absolute;right:4%;bottom:1%;color:#f4edde;font:bold clamp(10px,2.9vw,17px) Georgia,'Times New Roman',serif;text-shadow:0 2px 2px #000,0 0 5px #000;pointer-events:none;z-index:9}.econ{position:absolute;z-index:7;color:#e8ded0;text-align:center;text-shadow:0 2px 2px #000,0 0 6px #000;letter-spacing:.035em;font-size:clamp(9px,2.4vw,16px);line-height:1;pointer-events:none}.action{left:13%;top:76%;width:12%}.bonus{left:31%;top:76%;width:12%}.reaction{left:58%;top:76%;width:14%}.move{left:75%;top:76%;width:11%}.pips{position:absolute;left:0;right:0;top:120%;display:flex;gap:clamp(3px,1.2vw,8px);justify-content:center}.pip{width:clamp(6px,1.9vw,11px);height:clamp(6px,1.9vw,11px);transform:rotate(45deg);border:1px solid rgba(255,232,206,.85);box-shadow:0 0 6px rgba(255,30,30,.55);background:#b91520}.bonus .pip{background:#333;box-shadow:none;border-color:#777}.move .pip{background:#d6a34a;box-shadow:0 0 6px rgba(214,163,74,.62)}.follow{position:absolute;left:101%;top:55%;width:8.7%;height:25%;background:linear-gradient(#111,#030303);border:2px solid #080808;box-shadow:inset 0 0 0 1px rgba(178,166,156,.38),0 0 8px #000;color:#e8ded0;text-shadow:0 2px 2px #000;font-size:clamp(7px,1vw,13px);text-align:center;padding-top:13%;z-index:7}.follow:before,.follow:after{content:"";position:absolute;left:14%;top:32%;width:32%;height:5%;background:#c4bbb0;transform:rotate(27deg);box-shadow:0 0 5px rgba(255,255,255,.3)}.follow:after{top:51%}.fkey{position:absolute;right:7%;top:12%;width:24%;height:38%;border:1px solid rgba(232,222,208,.6);line-height:1.35;background:#060606}.mode{position:absolute;left:42%;right:42%;top:91%;z-index:8;color:#d9cbb8;text-align:center;text-shadow:0 2px 2px #000;font-size:clamp(7px,1.8vw,12px);pointer-events:none}.tools{position:fixed;top:10px;left:10px;z-index:10;display:none;gap:8px}.tools button{background:rgba(10,10,10,.8);color:#fff;border:1px solid #444;border-radius:6px;padding:8px 10px;font:12px system-ui}body.show-tools .tools{display:flex}.error{position:fixed;top:12px;left:12px;right:12px;z-index:20;background:#2a0000;color:#fff;border:1px solid #a33;padding:10px;font:13px system-ui}@media(max-width:700px){.bar{width:155vw;max-width:none}.follow{display:none}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#f7f6f2;font-family:Georgia,'Times New Roman',serif}
+.stage{position:fixed;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:10px 10px calc(24px + env(safe-area-inset-bottom))}
+.bar{position:relative;width:min(98vw,1500px);aspect-ratio:500/159;filter:drop-shadow(0 10px 16px #0008)}
+.shell{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:0;opacity:0}.shell.ready{opacity:1}
+.slot{position:absolute;border:0;background:transparent;padding:0;margin:0;overflow:visible;-webkit-tap-highlight-color:transparent;z-index:4;cursor:pointer}.slot.debug{background:rgba(255,0,0,.10);outline:1px solid rgba(255,0,0,.65)}.slot:disabled{cursor:default}
+.key{position:absolute;left:0;right:0;top:4%;height:24%;text-align:center;color:#cdb486;font-size:clamp(11px,3.1vw,19px);line-height:1;text-shadow:0 1px 0 #000,0 2px 4px rgba(0,0,0,.95),0 0 7px rgba(255,238,196,.24);letter-spacing:.045em;pointer-events:none;z-index:6}
+.iconFx{position:absolute;left:0;right:0;bottom:0;height:70.5%;overflow:hidden;pointer-events:none;z-index:5}
+.flash{position:absolute;left:-5%;right:-5%;top:-3%;bottom:-4%;border:2px solid rgba(255,72,72,.98);box-shadow:0 0 11px rgba(255,48,48,.98),0 0 24px rgba(255,0,0,.68),inset 0 0 8px rgba(255,70,70,.30);opacity:0;pointer-events:none;z-index:10}.slot.active .flash{animation:flash .50s ease-out forwards}@keyframes flash{0%{opacity:1;filter:brightness(1.85)}55%{opacity:.88}100%{opacity:0;filter:brightness(1)}}
+.cooldown{position:absolute;left:0;right:0;top:0;height:0;background:rgba(0,0,0,.68);box-shadow:inset 0 0 14px #000;transition:height 2.4s linear;pointer-events:none;z-index:7}.slot.cooling .iconFx{filter:saturate(.75) brightness(.82)}
+.count{position:absolute;right:4%;bottom:1%;color:#f4edde;font:bold clamp(10px,2.9vw,17px) Georgia,'Times New Roman',serif;text-shadow:0 2px 2px #000,0 0 5px #000;pointer-events:none;z-index:9}
+.econ{position:absolute;z-index:7;color:#e8ded0;text-align:center;text-shadow:0 2px 2px #000,0 0 6px #000;letter-spacing:.035em;font-size:clamp(9px,2.4vw,16px);line-height:1;pointer-events:none}.action{left:13%;top:76%;width:12%}.bonus{left:31%;top:76%;width:12%}.reaction{left:58%;top:76%;width:14%}.move{left:75%;top:76%;width:11%}
+.pips{position:absolute;left:0;right:0;top:120%;display:flex;gap:clamp(3px,1.2vw,8px);justify-content:center}.pip{width:clamp(6px,1.9vw,11px);height:clamp(6px,1.9vw,11px);transform:rotate(45deg);border:1px solid rgba(255,232,206,.85);box-shadow:0 0 6px rgba(255,30,30,.55);background:#b91520}.bonus .pip{background:#333;box-shadow:none;border-color:#777}.move .pip{background:#d6a34a;box-shadow:0 0 6px rgba(214,163,74,.62)}
+.mode{position:absolute;left:42%;right:42%;top:91%;z-index:8;color:#d9cbb8;text-align:center;text-shadow:0 2px 2px #000;font-size:clamp(7px,1.8vw,12px);pointer-events:none}
+.tools{position:fixed;top:10px;left:10px;z-index:10;display:none;gap:8px}.tools button{background:rgba(10,10,10,.8);color:#fff;border:1px solid #444;border-radius:6px;padding:8px 10px;font:12px system-ui}body.show-tools .tools{display:flex}.error{position:fixed;top:12px;left:12px;right:12px;z-index:20;background:#2a0000;color:#fff;border:1px solid #a33;padding:10px;font:13px system-ui}
+@media(max-width:700px){.bar{width:155vw;max-width:none}}
 </style>
 </head>
 <body>
-<div class="stage"><div id="bar" class="bar"><img id="shell" class="shell" alt=""><div id="mode" class="mode">Combat Hotbar</div><div class="econ action">ACTION<div class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i></div></div><div class="econ bonus">BONUS<div class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i></div></div><div class="econ reaction">REACTION<div class="pips"><i class="pip"></i></div></div><div class="econ move">MOVE<div class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i></div></div><div class="follow"><span class="fkey">F</span>Follow</div></div></div>
+<div class="stage">
+  <div id="bar" class="bar">
+    <img id="shell" class="shell" alt="">
+    <div id="mode" class="mode">Combat Hotbar</div>
+    <div class="econ action">ACTION<div class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i></div></div>
+    <div class="econ bonus">BONUS<div class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i><i class="pip"></i></div></div>
+    <div class="econ reaction">REACTION<div class="pips"><i class="pip"></i></div></div>
+    <div class="econ move">MOVE<div class="pips"><i class="pip"></i><i class="pip"></i><i class="pip"></i></div></div>
+  </div>
+</div>
 <div class="tools"><button id="debug" type="button">Debug hitboxes</button><button id="modeBtn" type="button">Toggle Tool/Combat</button></div>
 <script>
 const shellEl=document.getElementById('shell');
@@ -51,7 +75,7 @@ innerRects.forEach((r,i)=>{
   b.style.top=toPctY(labelTop);
   b.style.width=toPctX(r[2]);
   b.style.height=toPctY(45);
-  b.innerHTML='<span class="key">'+b.dataset.key+'</span><span class="iconFx"><span class="cooldown"></span><span class="flash"></span>'+(counts[i]?'<span class="count">'+counts[i]+'</span>':'')+'</span>';
+  b.innerHTML='<span class="flash"></span><span class="key">'+b.dataset.key+'</span><span class="iconFx"><span class="cooldown"></span>'+(counts[i]?'<span class="count">'+counts[i]+'</span>':'')+'</span>';
   b.addEventListener('click',()=>activate(b));
   bar.appendChild(b);
   buttons.push(b);
@@ -70,7 +94,7 @@ function activate(b){
   requestAnimationFrame(()=>requestAnimationFrame(()=>{c.style.transition='height 2.4s linear';c.style.height='0%'}));
   const n=b.querySelector('.count');
   if(n&&Number(n.textContent)>0)n.textContent=String(Number(n.textContent)-1);
-  setTimeout(()=>b.classList.remove('active'),300);
+  setTimeout(()=>b.classList.remove('active'),520);
   setTimeout(()=>{b.dataset.cooling='0';b.disabled=false;b.classList.remove('cooling')},2450);
 }
 document.addEventListener('keydown',e=>{
